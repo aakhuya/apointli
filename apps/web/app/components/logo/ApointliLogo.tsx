@@ -13,7 +13,7 @@ export function ApointliLogo({
   className = '',
   variant = 'dark',
 }: ApointliLogoProps) {
-  const textColor = variant === 'light' ? 'text-white' : 'text-[#0f172a]'
+  const textColor = variant === 'light' ? 'text-white' : 'text-[#0a1628]'
   const taglineColor = variant === 'light' ? 'text-blue-100' : 'text-gray-400'
   
   return (
@@ -30,14 +30,14 @@ export function ApointliLogo({
         aria-hidden="true"
         role="img"
       >
-        {/* Background - Deep Navy */}
-        <rect width="48" height="48" rx="14" fill="#1e3a8a" />
+        {/* Background - Dark Navy */}
+        <rect width="48" height="48" rx="14" fill="#0a1628" />
         
-        {/* Lowercase 'a' shape */}
+        {/* Lowercase 'a' with opening below - appointment mark */}
         <path
           d="M24 34C19.5 34 16 30.5 16 26C16 21.5 19.5 18 24 18C28.5 18 32 21.5 32 26V34"
           stroke="white"
-          strokeWidth="4.5"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -45,22 +45,13 @@ export function ApointliLogo({
         {/* Opening below - appointment slot */}
         <path
           d="M24 34L24 38"
-          stroke="#c7d2fe"
-          strokeWidth="4"
-          strokeLinecap="round"
-        />
-        
-        {/* Appointment indicator - small checkmark */}
-        <path
-          d="M20 26L23 29L30 22"
-          stroke="#c7d2fe"
+          stroke="white"
           strokeWidth="3.5"
           strokeLinecap="round"
-          strokeLinejoin="round"
         />
         
-        {/* Small scheduling dot */}
-        <circle cx="34" cy="12" r="3" fill="#c7d2fe" />
+        {/* Small connection dot */}
+        <circle cx="30" cy="20" r="2.5" fill="white" opacity="0.5" />
       </svg>
 
       {showWordmark && (
@@ -77,7 +68,7 @@ export function ApointliLogo({
   )
 }
 
-// Icon only version
+// Icon only version for favicon and mobile
 export function ApointliIcon({ size = 32, className = '' }: { size?: number; className?: string }) {
   return (
     <svg
@@ -90,32 +81,24 @@ export function ApointliIcon({ size = 32, className = '' }: { size?: number; cla
       aria-hidden="true"
       role="img"
     >
-      <rect width="48" height="48" rx="14" fill="#1e3a8a" />
+      <rect width="48" height="48" rx="14" fill="#0a1628" />
       
       <path
         d="M24 34C19.5 34 16 30.5 16 26C16 21.5 19.5 18 24 18C28.5 18 32 21.5 32 26V34"
         stroke="white"
-        strokeWidth="4.5"
+        strokeWidth="4"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       
       <path
         d="M24 34L24 38"
-        stroke="#c7d2fe"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      
-      <path
-        d="M20 26L23 29L30 22"
-        stroke="#c7d2fe"
+        stroke="white"
         strokeWidth="3.5"
         strokeLinecap="round"
-        strokeLinejoin="round"
       />
       
-      <circle cx="34" cy="12" r="3" fill="#c7d2fe" />
+      <circle cx="30" cy="20" r="2.5" fill="white" opacity="0.5" />
     </svg>
   )
 }

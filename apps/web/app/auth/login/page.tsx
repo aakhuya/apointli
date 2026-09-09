@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Loader } from '@/app/components/Loader'
 import { GoogleIcon } from '@/app/components/icons/GoogleIcon'
+import { AppleIcon } from '@/app/components/icons/AppleIcon'
 import { ApointliLogo } from '@/app/components/logo/ApointliLogo'
 import { authService } from '@/app/lib/auth/auth.service'
 
@@ -24,11 +25,13 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [lastUsedEmail, setLastUsedEmail] = useState<string | null>(null)
 
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -37,9 +40,12 @@ export default function LoginPage() {
     },
   })
 
+  const emailValue = watch('email')
+
   useEffect(() => {
     const savedEmail = localStorage.getItem('rememberedEmail')
     if (savedEmail) {
+      setLastUsedEmail(savedEmail)
       setValue('email', savedEmail)
       setValue('rememberMe', true)
     }
@@ -72,28 +78,43 @@ export default function LoginPage() {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
   }
 
+  const handleAppleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/apple`
+  }
+
+  const handleUseLastEmail = () => {
+    if (lastUsedEmail) {
+      setValue('email', lastUsedEmail)
+    }
+  }
+
   return (
-    <div className="h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       {/* Left Side - Form */}
-      <div className="flex-1 flex items-center justify-center px-6 sm:px-8 lg:px-12 xl:px-16 bg-white order-2 lg:order-1 h-full">
+      <div className="flex-1 flex items-center justify-center px-6 sm:px-8 lg:px-12 xl:px-16 bg-white order-2 lg:order-1 py-12 lg:py-16">
         <div className="w-full max-w-sm">
+          {/* Logo at top */}
+          <div className="mb-8 flex justify-center lg:justify-start">
+            <ApointliLogo size={36} />
+          </div>
+
           <div className="mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Welcome back</h1>
-            <p className="mt-1.5 text-sm text-gray-500">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">Welcome back</h1>
+            <p className="mt-2 text-sm text-gray-500">
               Don't have an account?{' '}
-              <Link href="/auth/register" className="font-semibold text-[#1e3a8a] hover:text-[#1e40af] transition-colors">
+              <Link href="/auth/register" className="font-semibold text-[#0a1628] hover:text-[#1a2a4a] transition-colors">
                 Create one
               </Link>
             </p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-rose-50 border border-rose-100 rounded-xl">
+            <div className="mb-4 p-3.5 bg-rose-50 border border-rose-200 rounded-xl">
               <p className="text-sm text-rose-600">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Email address
@@ -103,13 +124,44 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 autoComplete="email"
-                className={`w-full px-4 py-2.5 border ${
-                  errors.email ? 'border-rose-300' : 'border-gray-200'
-                } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent transition-all text-sm placeholder-gray-400 bg-gray-50`}
+                className={`w-full px-4 py-3 border-2 ${
+                  errors.email ? 'border-rose-300' : 'border-gray-300'
+                } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50`}
                 placeholder="you@example.com"
               />
               {errors.email && (
                 <p className="mt-1.5 text-sm text-rose-600">{errors.email.message}</p>
+              )}
+              
+              {/* Last Used Email Suggestion */}
+              {lastUsedEmail && !emailValue && (
+                <div className="mt-2.5 p-2.5 bg-gray-50 border border-gray-200 rounded-lg">
+                  <p className="text-xs text-gray-500">
+                    Last used:{' '}
+                    <button
+                      type="button"
+                      onClick={handleUseLastEmail}
+                      className="font-medium text-[#0a1628] hover:underline focus:outline-none"
+                    >
+                      {lastUsedEmail}
+                    </button>
+                  </p>
+                </div>
+              )}
+              
+              {lastUsedEmail && emailValue && emailValue !== lastUsedEmail && (
+                <div className="mt-2.5 p-2.5 bg-gray-50 border border-gray-200 rounded-lg">
+                  <p className="text-xs text-gray-500">
+                    Not {lastUsedEmail}?{' '}
+                    <button
+                      type="button"
+                      onClick={handleUseLastEmail}
+                      className="font-medium text-[#0a1628] hover:underline focus:outline-none"
+                    >
+                      Use last used
+                    </button>
+                  </p>
+                </div>
               )}
             </div>
 
@@ -118,7 +170,7 @@ export default function LoginPage() {
                 <label htmlFor="password" className="block text-sm font-semibold text-gray-700">
                   Password
                 </label>
-                <Link href="/auth/forgot-password" className="text-sm font-medium text-[#1e3a8a] hover:text-[#1e40af] transition-colors">
+                <Link href="/auth/forgot-password" className="text-sm font-medium text-[#0a1628] hover:text-[#1a2a4a] transition-colors">
                   Forgot password?
                 </Link>
               </div>
@@ -128,9 +180,9 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
-                  className={`w-full px-4 py-2.5 border ${
-                    errors.password ? 'border-rose-300' : 'border-gray-200'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent transition-all text-sm placeholder-gray-400 bg-gray-50 pr-12`}
+                  className={`w-full px-4 py-3 border-2 ${
+                    errors.password ? 'border-rose-300' : 'border-gray-300'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50 pr-12`}
                   placeholder="Enter your password"
                 />
                 <button
@@ -157,20 +209,20 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2.5 cursor-pointer group">
                 <input
                   {...register('rememberMe')}
                   type="checkbox"
-                  className="w-4 h-4 text-[#1e3a8a] border-gray-300 rounded focus:ring-[#1e3a8a]"
+                  className="w-4 h-4 text-[#0a1628] border-2 border-gray-300 rounded focus:ring-[#0a1628] group-hover:border-[#0a1628] transition-colors"
                 />
-                <span className="text-sm text-gray-600">Remember me</span>
+                <span className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Remember me</span>
               </label>
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-[#1e3a8a] text-white font-semibold rounded-xl hover:bg-[#1e40af] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1e3a8a] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm hover:shadow-md"
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0a1628] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm hover:shadow-md"
             >
               {isLoading ? (
                 <>
@@ -183,7 +235,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="relative my-5">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
             </div>
@@ -192,21 +244,31 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all text-sm font-medium text-gray-700 shadow-sm hover:shadow-md"
-          >
-            <GoogleIcon />
-            Continue with Google
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={handleGoogleLogin}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white hover:bg-gray-50 hover:border-gray-300 transition-all text-sm font-medium text-gray-700 shadow-sm hover:shadow-md"
+            >
+              <GoogleIcon />
+              Continue with Google
+            </button>
 
-          <p className="mt-5 text-center text-xs text-gray-500">
+            <button
+              onClick={handleAppleLogin}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-black hover:bg-gray-900 hover:border-gray-600 transition-all text-sm font-medium text-white shadow-sm hover:shadow-md"
+            >
+              <AppleIcon className="w-5 h-5 text-white" />
+              Continue with Apple
+            </button>
+          </div>
+
+          <p className="mt-6 text-center text-xs text-gray-500">
             By continuing, you agree to our{' '}
-            <a href="#" className="text-[#1e3a8a] hover:text-[#1e40af] font-medium">
+            <a href="#" className="text-[#0a1628] hover:text-[#1a2a4a] font-medium">
               Terms of Service
             </a>{' '}
             and{' '}
-            <a href="#" className="text-[#1e3a8a] hover:text-[#1e40af] font-medium">
+            <a href="#" className="text-[#0a1628] hover:text-[#1a2a4a] font-medium">
               Privacy Policy
             </a>
           </p>
@@ -214,13 +276,13 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Branding */}
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-[#1e3a8a] via-[#1e40af] to-[#4f46e5] relative overflow-hidden items-center justify-center p-8 xl:p-12 order-1 lg:order-2 h-full">
+      <div className="hidden lg:flex flex-1 bg-[#0a1628] relative overflow-hidden items-center justify-center p-8 xl:p-12 order-1 lg:order-2 min-h-[600px] lg:min-h-screen">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
         
         <div className="relative z-10 flex flex-col items-center text-white max-w-md">
           <div className="mb-6">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 xl:w-32 xl:h-32 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 xl:w-32 xl:h-32 bg-white/5 backdrop-blur-sm rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl">
               <ApointliLogo size={72} showWordmark={false} variant="light" />
             </div>
           </div>
@@ -230,30 +292,30 @@ export default function LoginPage() {
             <span className="block text-blue-200">from anywhere</span>
           </h2>
           
-          <p className="mt-3 xl:mt-4 text-blue-100 text-center text-base xl:text-lg leading-relaxed">
+          <p className="mt-3 xl:mt-4 text-blue-100/80 text-center text-base xl:text-lg leading-relaxed">
             Access your appointments, staff, and customers all in one place.
           </p>
           
           <div className="mt-6 xl:mt-8 grid grid-cols-3 gap-4 xl:gap-6 w-full">
             <div className="text-center">
               <div className="text-2xl xl:text-3xl font-bold text-white">500+</div>
-              <div className="text-[10px] xl:text-xs text-blue-200 mt-1">Businesses</div>
+              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Businesses</div>
             </div>
             <div className="text-center border-l border-r border-white/10">
               <div className="text-2xl xl:text-3xl font-bold text-white">10K+</div>
-              <div className="text-[10px] xl:text-xs text-blue-200 mt-1">Appointments</div>
+              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Appointments</div>
             </div>
             <div className="text-center">
               <div className="text-2xl xl:text-3xl font-bold text-white">98%</div>
-              <div className="text-[10px] xl:text-xs text-blue-200 mt-1">Satisfaction</div>
+              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Satisfaction</div>
             </div>
           </div>
 
-          <div className="mt-6 xl:mt-8 flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 xl:px-6 py-2 xl:py-3 rounded-full border border-white/10">
+          <div className="mt-6 xl:mt-8 flex items-center gap-3 bg-white/5 backdrop-blur-sm px-5 xl:px-6 py-2.5 xl:py-3 rounded-full border border-white/10">
             <svg className="w-4 h-4 xl:w-5 xl:h-5 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            <span className="text-xs xl:text-sm text-blue-100">Trusted by businesses worldwide</span>
+            <span className="text-xs xl:text-sm text-blue-100/70">Trusted by businesses worldwide</span>
           </div>
         </div>
       </div>

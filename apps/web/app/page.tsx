@@ -94,11 +94,11 @@ export default function Home() {
             <nav className="hidden md:flex items-center gap-8">
               <a href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors relative group">
                 Features
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1e3a8a] transition-all group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0a1628] transition-all group-hover:w-full"></span>
               </a>
               <a href="#solutions" className="text-sm text-gray-600 hover:text-gray-900 transition-colors relative group">
                 Solutions
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#1e3a8a] transition-all group-hover:w-full"></span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#0a1628] transition-all group-hover:w-full"></span>
               </a>
             </nav>
 
@@ -111,7 +111,7 @@ export default function Home() {
               </Link>
               <Link
                 href="/auth/register"
-                className="text-sm font-medium text-white bg-[#1e3a8a] hover:bg-[#1e40af] px-5 py-2.5 rounded-lg transition-all shadow-sm hover:shadow-md hover:scale-105"
+                className="text-sm font-medium text-white bg-[#0a1628] hover:bg-[#1a2a4a] px-5 py-2.5 rounded-lg transition-all shadow-sm hover:shadow-md hover:scale-105"
               >
                 Get Started
               </Link>
@@ -128,9 +128,9 @@ export default function Home() {
             <div className={`text-center lg:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-gray-900 leading-[1.1]">
                 The smarter way to
-                <span className="block text-[#1e3a8a] relative">
+                <span className="block text-[#0a1628] relative">
                   book and manage
-                  <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#1e3a8a]/20" viewBox="0 0 100 10" preserveAspectRatio="none">
+                  <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#0a1628]/20" viewBox="0 0 100 10" preserveAspectRatio="none">
                     <path d="M0 5 Q25 0 50 5 T100 5" stroke="currentColor" strokeWidth="2" fill="none"/>
                   </svg>
                 </span>
@@ -145,17 +145,11 @@ export default function Home() {
               <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4">
                 <Link
                   href="/auth/register"
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 bg-[#1e3a8a] text-white font-medium rounded-xl hover:bg-[#1e40af] transition-all shadow-lg hover:shadow-xl hover:scale-105 group"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 bg-[#0a1628] text-white font-medium rounded-xl hover:bg-[#1a2a4a] transition-all shadow-lg hover:shadow-xl hover:scale-105 group"
                 >
                   Start for Free
                   <ArrowRightIcon className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </Link>
-                <button className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 bg-white text-gray-700 font-medium rounded-xl border-2 border-gray-200 hover:border-[#1e3a8a] hover:text-[#1e3a8a] transition-all hover:shadow-lg">
-                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
-                  Watch Demo
-                </button>
               </div>
 
               <div className="mt-4 sm:mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6">
@@ -191,9 +185,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right - Dashboard Preview with Animation */}
+            {/* Right - Dashboard Preview */}
             <div className={`relative mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <div className="absolute -inset-4 bg-gradient-to-br from-[#1e3a8a]/10 to-[#4f46e5]/10 rounded-3xl blur-2xl animate-pulse-slow"></div>
+              <div className="absolute -inset-4 bg-gradient-to-br from-[#0a1628]/10 to-[#4f46e5]/10 rounded-3xl blur-2xl animate-pulse-slow"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden hover:shadow-3xl transition-shadow duration-500">
                 <div className="bg-gray-50/80 px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-200 flex items-center gap-2">
                   <div className="flex gap-1.5">
@@ -209,14 +203,14 @@ export default function Home() {
                       <h3 className="text-xs sm:text-sm font-semibold text-gray-900">Good morning, Sarah</h3>
                       <p className="text-[10px] sm:text-xs text-gray-500">Here's what's happening today</p>
                     </div>
-                    <button className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium text-white bg-[#1e3a8a] rounded-lg hover:bg-[#1e40af] transition-colors hover:scale-105">
+                    <button className="px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium text-white bg-[#0a1628] rounded-lg hover:bg-[#1a2a4a] transition-colors hover:scale-105">
                       + New
                     </button>
                   </div>
 
                   <div className="grid grid-cols-4 gap-1.5 sm:gap-3 mb-3 sm:mb-5">
                     {[
-                      { label: 'Bookings', value: '18', change: '+12%', color: 'text-[#1e3a8a]' },
+                      { label: 'Bookings', value: '18', change: '+12%', color: 'text-[#0a1628]' },
                       { label: 'Revenue', value: '$847', change: '+8%', color: 'text-emerald-600' },
                       { label: 'Upcoming', value: '7', change: '+3%', color: 'text-blue-600' },
                       { label: 'No-shows', value: '2', change: '-5%', color: 'text-rose-600' },
@@ -236,11 +230,11 @@ export default function Home() {
                   <div>
                     <div className="flex justify-between items-center mb-1.5 sm:mb-2.5">
                       <h4 className="text-[10px] sm:text-xs font-semibold text-gray-700">Today's appointments</h4>
-                      <span className="text-[8px] sm:text-[10px] text-[#1e3a8a] font-medium hover:underline cursor-pointer">View all →</span>
+                      <span className="text-[8px] sm:text-[10px] text-[#0a1628] font-medium hover:underline cursor-pointer">View all →</span>
                     </div>
                     <div className="space-y-1.5 sm:space-y-2">
                       {[
-                        { time: '9:00 AM', client: 'Emma Wilson', service: 'Hair Styling', color: 'bg-[#1e3a8a]' },
+                        { time: '9:00 AM', client: 'Emma Wilson', service: 'Hair Styling', color: 'bg-[#0a1628]' },
                         { time: '10:30 AM', client: 'James Chen', service: 'Consultation', color: 'bg-blue-500' },
                         { time: '1:00 PM', client: 'Lisa Park', service: 'Manicure', color: 'bg-emerald-500' },
                       ].map((appt, i) => (
@@ -262,7 +256,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust Section with Animation */}
+      {/* Trust Section */}
       <section className="py-8 sm:py-12 md:py-16 bg-white border-t border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-xs sm:text-sm font-medium text-gray-500 mb-4 sm:mb-6 md:mb-8 tracking-widest uppercase">
@@ -288,16 +282,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section with Professional Icons */}
+      {/* Features Section */}
       <section id="features" className="py-12 sm:py-16 md:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12 md:mb-16">
-            <span className="text-xs font-semibold text-[#1e3a8a] tracking-widest uppercase bg-[#1e3a8a]/10 px-3 py-1 rounded-full">
+            <span className="text-xs font-semibold text-[#0a1628] tracking-widest uppercase bg-[#0a1628]/10 px-3 py-1 rounded-full">
               Features
             </span>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mt-4">
               Everything you need to
-              <span className="block text-[#1e3a8a]">grow your business</span>
+              <span className="block text-[#0a1628]">grow your business</span>
             </h2>
             <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-600">
               Powerful features designed to save you time and delight your customers
@@ -310,7 +304,7 @@ export default function Home() {
               return (
                 <div
                   key={i}
-                  className="group bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 hover:shadow-xl hover:border-[#1e3a8a]/20 transition-all duration-300 hover:-translate-y-1"
+                  className="group bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 hover:shadow-xl hover:border-[#0a1628]/20 transition-all duration-300 hover:-translate-y-1"
                   style={{ transitionDelay: `${i * 50}ms` }}
                 >
                   <div className={`w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br ${feature.color} rounded-xl flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform shadow-md`}>
@@ -319,7 +313,7 @@ export default function Home() {
                   <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 sm:mb-1.5">{feature.title}</h3>
                   <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">{feature.description}</p>
                   <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="text-xs font-medium text-[#1e3a8a] inline-flex items-center">
+                    <span className="text-xs font-medium text-[#0a1628] inline-flex items-center">
                       Learn more
                       <ArrowRightIcon className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform" />
                     </span>
@@ -331,9 +325,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section with Animation */}
-      <section className="py-12 sm:py-16 md:py-20 bg-[#1e3a8a] relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#1e3a8a] via-[#1e40af] to-[#4f46e5] opacity-50"></div>
+      {/* CTA Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-[#0a1628] relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1628] via-[#1a2a4a] to-[#2a3a5a] opacity-50"></div>
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         
@@ -347,7 +341,7 @@ export default function Home() {
           <div className="mt-6 sm:mt-8 md:mt-10">
             <Link
               href="/auth/register"
-              className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-[#1e3a8a] font-medium rounded-xl hover:bg-gray-50 transition-all shadow-lg hover:shadow-2xl hover:scale-105 group"
+              className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-[#0a1628] font-medium rounded-xl hover:bg-gray-50 transition-all shadow-lg hover:shadow-2xl hover:scale-105 group"
             >
               Start your free trial
               <ArrowRightIcon className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -357,11 +351,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer - Clean & Honest */}
-      <footer className="bg-gray-900 text-gray-400">
+      {/* Footer */}
+      <footer className="bg-[#0a1628] text-gray-400">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
-            {/* Brand Column */}
             <div>
               <ApointliLogo size={28} variant="light" />
               <p className="text-xs sm:text-sm mt-3 text-gray-500 max-w-xs">
@@ -369,7 +362,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Product Column */}
             <div>
               <h4 className="text-white font-medium mb-3 sm:mb-4 text-sm sm:text-base">Product</h4>
               <ul className="space-y-2 text-xs sm:text-sm">
@@ -386,7 +378,6 @@ export default function Home() {
               </ul>
             </div>
 
-            {/* Company Column */}
             <div>
               <h4 className="text-white font-medium mb-3 sm:mb-4 text-sm sm:text-base">Company</h4>
               <ul className="space-y-2 text-xs sm:text-sm">
@@ -404,7 +395,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Bottom Bar */}
           <div className="mt-8 pt-6 border-t border-gray-800 text-xs sm:text-sm text-center text-gray-500">
             &copy; 2026 apointli. All rights reserved.
           </div>

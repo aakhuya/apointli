@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Loader } from '@/app/components/Loader'
 import { GoogleIcon } from '@/app/components/icons/GoogleIcon'
+import { AppleIcon } from '@/app/components/icons/AppleIcon'
 import { ApointliLogo } from '@/app/components/logo/ApointliLogo'
 import { authService } from '@/app/lib/auth/auth.service'
 
@@ -63,6 +64,10 @@ export default function RegisterPage() {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
   }
 
+  const handleAppleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/apple`
+  }
+
   const getPasswordStrength = (pass: string) => {
     if (!pass) return { score: 0, label: 'Enter a password', color: 'bg-gray-200', text: 'text-gray-400' }
     if (pass.length < 6) return { score: 1, label: 'Weak', color: 'bg-red-500', text: 'text-red-500' }
@@ -74,30 +79,35 @@ export default function RegisterPage() {
   const strength = getPasswordStrength(password || '')
 
   return (
-    <div className="h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       {/* Left Side - Form */}
-      <div className="flex-1 flex items-center justify-center px-6 sm:px-8 lg:px-12 xl:px-16 bg-white order-2 lg:order-1 h-full">
+      <div className="flex-1 flex items-center justify-center px-6 sm:px-8 lg:px-12 xl:px-16 bg-white order-2 lg:order-1 py-12 lg:py-16">
         <div className="w-full max-w-sm">
-          <div className="mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Create account</h1>
-            <p className="mt-1.5 text-sm text-gray-500">
+          {/* Logo at top */}
+          <div className="mb-8 flex justify-center lg:justify-start">
+            <ApointliLogo size={36} />
+          </div>
+
+          <div className="mb-8">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">Create account</h1>
+            <p className="mt-2 text-sm text-gray-500">
               Already have an account?{' '}
-              <Link href="/auth/login" className="font-semibold text-[#1e3a8a] hover:text-[#1e40af] transition-colors">
+              <Link href="/auth/login" className="font-semibold text-[#0a1628] hover:text-[#1a2a4a] transition-colors">
                 Sign in
               </Link>
             </p>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-rose-50 border border-rose-100 rounded-xl">
+            <div className="mb-4 p-3.5 bg-rose-50 border border-rose-200 rounded-xl">
               <p className="text-sm text-rose-600">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-            <div className="grid grid-cols-2 gap-3">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 mb-1">
+                <label htmlFor="firstName" className="block text-sm font-semibold text-gray-700 mb-1.5">
                   First name
                 </label>
                 <input
@@ -105,18 +115,18 @@ export default function RegisterPage() {
                   id="firstName"
                   type="text"
                   autoComplete="given-name"
-                  className={`w-full px-4 py-2 border ${
-                    errors.firstName ? 'border-rose-300' : 'border-gray-200'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent transition-all text-sm placeholder-gray-400 bg-gray-50`}
+                  className={`w-full px-4 py-3 border-2 ${
+                    errors.firstName ? 'border-rose-300' : 'border-gray-300'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50`}
                   placeholder="John"
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-rose-600">{errors.firstName.message}</p>
+                  <p className="mt-1.5 text-sm text-rose-600">{errors.firstName.message}</p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700 mb-1">
+                <label htmlFor="lastName" className="block text-sm font-semibold text-gray-700 mb-1.5">
                   Last name
                 </label>
                 <input
@@ -124,19 +134,19 @@ export default function RegisterPage() {
                   id="lastName"
                   type="text"
                   autoComplete="family-name"
-                  className={`w-full px-4 py-2 border ${
-                    errors.lastName ? 'border-rose-300' : 'border-gray-200'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent transition-all text-sm placeholder-gray-400 bg-gray-50`}
+                  className={`w-full px-4 py-3 border-2 ${
+                    errors.lastName ? 'border-rose-300' : 'border-gray-300'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50`}
                   placeholder="Doe"
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-rose-600">{errors.lastName.message}</p>
+                  <p className="mt-1.5 text-sm text-rose-600">{errors.lastName.message}</p>
                 )}
               </div>
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Email address
               </label>
               <input
@@ -144,18 +154,18 @@ export default function RegisterPage() {
                 id="email"
                 type="email"
                 autoComplete="email"
-                className={`w-full px-4 py-2 border ${
-                  errors.email ? 'border-rose-300' : 'border-gray-200'
-                } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent transition-all text-sm placeholder-gray-400 bg-gray-50`}
+                className={`w-full px-4 py-3 border-2 ${
+                  errors.email ? 'border-rose-300' : 'border-gray-300'
+                } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50`}
                 placeholder="you@example.com"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-rose-600">{errors.email.message}</p>
+                <p className="mt-1.5 text-sm text-rose-600">{errors.email.message}</p>
               )}
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Password
               </label>
               <div className="relative">
@@ -164,9 +174,9 @@ export default function RegisterPage() {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
-                  className={`w-full px-4 py-2 border ${
-                    errors.password ? 'border-rose-300' : 'border-gray-200'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent transition-all text-sm placeholder-gray-400 bg-gray-50 pr-12`}
+                  className={`w-full px-4 py-3 border-2 ${
+                    errors.password ? 'border-rose-300' : 'border-gray-300'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50 pr-12`}
                   placeholder="Create a strong password"
                 />
                 <button
@@ -187,13 +197,13 @@ export default function RegisterPage() {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-rose-600">{errors.password.message}</p>
+                <p className="mt-1.5 text-sm text-rose-600">{errors.password.message}</p>
               )}
               
               {password && (
-                <div className="mt-1.5">
+                <div className="mt-2">
                   <div className="flex items-center gap-3">
-                    <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="flex-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                       <div 
                         className={`h-full ${strength.color} transition-all duration-500`}
                         style={{ width: `${(strength.score / 4) * 100}%` }}
@@ -201,13 +211,13 @@ export default function RegisterPage() {
                     </div>
                     <span className={`text-xs font-medium ${strength.text}`}>{strength.label}</span>
                   </div>
-                  <p className="mt-0.5 text-xs text-gray-400">Must be at least 8 characters</p>
+                  <p className="mt-1 text-xs text-gray-400">Must be at least 8 characters</p>
                 </div>
               )}
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1">
+              <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Confirm password
               </label>
               <div className="relative">
@@ -216,9 +226,9 @@ export default function RegisterPage() {
                   id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   autoComplete="new-password"
-                  className={`w-full px-4 py-2 border ${
-                    errors.confirmPassword ? 'border-rose-300' : 'border-gray-200'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1e3a8a] focus:border-transparent transition-all text-sm placeholder-gray-400 bg-gray-50 pr-12`}
+                  className={`w-full px-4 py-3 border-2 ${
+                    errors.confirmPassword ? 'border-rose-300' : 'border-gray-300'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50 pr-12`}
                   placeholder="Confirm your password"
                 />
                 <button
@@ -239,14 +249,14 @@ export default function RegisterPage() {
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-rose-600">{errors.confirmPassword.message}</p>
+                <p className="mt-1.5 text-sm text-rose-600">{errors.confirmPassword.message}</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-[#1e3a8a] text-white font-semibold rounded-xl hover:bg-[#1e40af] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1e3a8a] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm hover:shadow-md"
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0a1628] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm hover:shadow-md"
             >
               {isLoading ? (
                 <>
@@ -259,7 +269,7 @@ export default function RegisterPage() {
             </button>
           </form>
 
-          <div className="relative my-5">
+          <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
             </div>
@@ -268,21 +278,31 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <button
-            onClick={handleGoogleLogin}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all text-sm font-medium text-gray-700 shadow-sm hover:shadow-md"
-          >
-            <GoogleIcon />
-            Continue with Google
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={handleGoogleLogin}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white hover:bg-gray-50 hover:border-gray-300 transition-all text-sm font-medium text-gray-700 shadow-sm hover:shadow-md"
+            >
+              <GoogleIcon />
+              Continue with Google
+            </button>
 
-          <p className="mt-4 text-center text-xs text-gray-500">
+            <button
+              onClick={handleAppleLogin}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-black hover:bg-gray-900 hover:border-gray-600 transition-all text-sm font-medium text-white shadow-sm hover:shadow-md"
+            >
+              <AppleIcon className="w-5 h-5 text-white" />
+              Continue with Apple
+            </button>
+          </div>
+
+          <p className="mt-6 text-center text-xs text-gray-500">
             By creating an account, you agree to our{' '}
-            <a href="#" className="text-[#1e3a8a] hover:text-[#1e40af] font-medium">
+            <a href="#" className="text-[#0a1628] hover:text-[#1a2a4a] font-medium">
               Terms of Service
             </a>{' '}
             and{' '}
-            <a href="#" className="text-[#1e3a8a] hover:text-[#1e40af] font-medium">
+            <a href="#" className="text-[#0a1628] hover:text-[#1a2a4a] font-medium">
               Privacy Policy
             </a>
           </p>
@@ -290,13 +310,13 @@ export default function RegisterPage() {
       </div>
 
       {/* Right Side - Branding */}
-      <div className="hidden lg:flex flex-1 bg-gradient-to-br from-[#1e3a8a] via-[#1e40af] to-[#4f46e5] relative overflow-hidden items-center justify-center p-8 xl:p-12 order-1 lg:order-2 h-full">
+      <div className="hidden lg:flex flex-1 bg-[#0a1628] relative overflow-hidden items-center justify-center p-8 xl:p-12 order-1 lg:order-2 min-h-[600px] lg:min-h-screen">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
         
         <div className="relative z-10 flex flex-col items-center text-white max-w-md">
           <div className="mb-6">
-            <div className="w-24 h-24 sm:w-28 sm:h-28 xl:w-32 xl:h-32 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl">
+            <div className="w-24 h-24 sm:w-28 sm:h-28 xl:w-32 xl:h-32 bg-white/5 backdrop-blur-sm rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl">
               <ApointliLogo size={72} showWordmark={false} variant="light" />
             </div>
           </div>
@@ -306,30 +326,30 @@ export default function RegisterPage() {
             <span className="block text-blue-200">bookings today</span>
           </h2>
           
-          <p className="mt-3 xl:mt-4 text-blue-100 text-center text-base xl:text-lg leading-relaxed">
+          <p className="mt-3 xl:mt-4 text-blue-100/80 text-center text-base xl:text-lg leading-relaxed">
             Get your professional booking system up and running in minutes.
           </p>
           
           <div className="mt-6 xl:mt-8 grid grid-cols-3 gap-4 xl:gap-6 w-full">
             <div className="text-center">
               <div className="text-2xl xl:text-3xl font-bold text-white">500+</div>
-              <div className="text-[10px] xl:text-xs text-blue-200 mt-1">Businesses</div>
+              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Businesses</div>
             </div>
             <div className="text-center border-l border-r border-white/10">
               <div className="text-2xl xl:text-3xl font-bold text-white">10K+</div>
-              <div className="text-[10px] xl:text-xs text-blue-200 mt-1">Appointments</div>
+              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Appointments</div>
             </div>
             <div className="text-center">
               <div className="text-2xl xl:text-3xl font-bold text-white">98%</div>
-              <div className="text-[10px] xl:text-xs text-blue-200 mt-1">Satisfaction</div>
+              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Satisfaction</div>
             </div>
           </div>
 
-          <div className="mt-6 xl:mt-8 flex items-center gap-3 bg-white/10 backdrop-blur-sm px-4 xl:px-6 py-2 xl:py-3 rounded-full border border-white/10">
+          <div className="mt-6 xl:mt-8 flex items-center gap-3 bg-white/5 backdrop-blur-sm px-5 xl:px-6 py-2.5 xl:py-3 rounded-full border border-white/10">
             <svg className="w-4 h-4 xl:w-5 xl:h-5 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
-            <span className="text-xs xl:text-sm text-blue-100">Join thousands of happy businesses</span>
+            <span className="text-xs xl:text-sm text-blue-100/70">Join thousands of happy businesses</span>
           </div>
         </div>
       </div>
