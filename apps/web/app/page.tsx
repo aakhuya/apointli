@@ -78,7 +78,6 @@ export default function Home() {
   const benefits = [
     'No credit card required',
     'Setup in minutes',
-    '24/7 customer support',
   ]
 
   return (
@@ -368,11 +367,6 @@ export default function Home() {
                 <li>
                   <a href="#features" className="text-gray-400 hover:text-white transition-colors hover:translate-x-1 inline-block">
                     Features
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors hover:translate-x-1 inline-block">
-                    Pricing
                   </a>
                 </li>
               </ul>

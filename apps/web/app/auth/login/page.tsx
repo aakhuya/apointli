@@ -89,18 +89,18 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
+    <div className="h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
       {/* Left Side - Form */}
-      <div className="flex-1 flex items-center justify-center px-6 sm:px-8 lg:px-12 xl:px-16 bg-white order-2 lg:order-1 py-12 lg:py-16">
+      <div className="flex-1 flex items-center justify-center px-6 sm:px-8 lg:px-12 xl:px-16 bg-white order-2 lg:order-1 h-full">
         <div className="w-full max-w-sm">
           {/* Logo at top */}
-          <div className="mb-8 flex justify-center lg:justify-start">
-            <ApointliLogo size={36} />
+          <div className="mb-6 flex justify-center lg:justify-start">
+            <ApointliLogo size={32} />
           </div>
 
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">Welcome back</h1>
-            <p className="mt-2 text-sm text-gray-500">
+          <div className="mb-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Welcome back</h1>
+            <p className="mt-1.5 text-sm text-gray-500">
               Don't have an account?{' '}
               <Link href="/auth/register" className="font-semibold text-[#0a1628] hover:text-[#1a2a4a] transition-colors">
                 Create one
@@ -109,12 +109,12 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-4 p-3.5 bg-rose-50 border border-rose-200 rounded-xl">
+            <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl">
               <p className="text-sm text-rose-600">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Email address
@@ -124,7 +124,7 @@ export default function LoginPage() {
                 id="email"
                 type="email"
                 autoComplete="email"
-                className={`w-full px-4 py-3 border-2 ${
+                className={`w-full px-4 py-2.5 border-2 ${
                   errors.email ? 'border-rose-300' : 'border-gray-300'
                 } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50`}
                 placeholder="you@example.com"
@@ -135,7 +135,7 @@ export default function LoginPage() {
               
               {/* Last Used Email Suggestion */}
               {lastUsedEmail && !emailValue && (
-                <div className="mt-2.5 p-2.5 bg-gray-50 border border-gray-200 rounded-lg">
+                <div className="mt-2 p-2 bg-gray-50 border border-gray-200 rounded-lg">
                   <p className="text-xs text-gray-500">
                     Last used:{' '}
                     <button
@@ -150,7 +150,7 @@ export default function LoginPage() {
               )}
               
               {lastUsedEmail && emailValue && emailValue !== lastUsedEmail && (
-                <div className="mt-2.5 p-2.5 bg-gray-50 border border-gray-200 rounded-lg">
+                <div className="mt-2 p-2 bg-gray-50 border border-gray-200 rounded-lg">
                   <p className="text-xs text-gray-500">
                     Not {lastUsedEmail}?{' '}
                     <button
@@ -180,7 +180,7 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
-                  className={`w-full px-4 py-3 border-2 ${
+                  className={`w-full px-4 py-2.5 border-2 ${
                     errors.password ? 'border-rose-300' : 'border-gray-300'
                   } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] transition-all text-sm placeholder-gray-400 bg-gray-50/50 hover:bg-gray-50 pr-12`}
                   placeholder="Enter your password"
@@ -209,7 +209,7 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2.5 cursor-pointer group">
+              <label className="flex items-center gap-2 cursor-pointer group">
                 <input
                   {...register('rememberMe')}
                   type="checkbox"
@@ -222,7 +222,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0a1628] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm hover:shadow-md"
+              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0a1628] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm hover:shadow-md"
             >
               {isLoading ? (
                 <>
@@ -235,7 +235,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="relative my-6">
+          <div className="relative my-5">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
             </div>
@@ -244,10 +244,10 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             <button
               onClick={handleGoogleLogin}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white hover:bg-gray-50 hover:border-gray-300 transition-all text-sm font-medium text-gray-700 shadow-sm hover:shadow-md"
+              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border-2 border-gray-200 rounded-xl bg-white hover:bg-gray-50 hover:border-gray-300 transition-all text-sm font-medium text-gray-700 shadow-sm hover:shadow-md"
             >
               <GoogleIcon />
               Continue with Google
@@ -255,14 +255,14 @@ export default function LoginPage() {
 
             <button
               onClick={handleAppleLogin}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-black hover:bg-gray-900 hover:border-gray-600 transition-all text-sm font-medium text-white shadow-sm hover:shadow-md"
+              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border-2 border-gray-200 rounded-xl bg-black hover:bg-gray-900 hover:border-gray-600 transition-all text-sm font-medium text-white shadow-sm hover:shadow-md"
             >
               <AppleIcon className="w-5 h-5 text-white" />
               Continue with Apple
             </button>
           </div>
 
-          <p className="mt-6 text-center text-xs text-gray-500">
+          <p className="mt-5 text-center text-xs text-gray-500">
             By continuing, you agree to our{' '}
             <a href="#" className="text-[#0a1628] hover:text-[#1a2a4a] font-medium">
               Terms of Service
@@ -276,7 +276,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Branding */}
-      <div className="hidden lg:flex flex-1 bg-[#0a1628] relative overflow-hidden items-center justify-center p-8 xl:p-12 order-1 lg:order-2 min-h-[600px] lg:min-h-screen">
+      <div className="hidden lg:flex flex-1 bg-[#0a1628] relative overflow-hidden items-center justify-center p-8 xl:p-12 order-1 lg:order-2 h-full">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
         
