@@ -1,146 +1,61 @@
-import React from 'react'
+import localFont from 'next/font/local'
+
+const jakarta = localFont({
+  src: [
+    {
+      path: '../../fonts/PlusJakartaSans-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+    {
+      path: '../../fonts/PlusJakartaSans-ExtraBold.woff2',
+      weight: '800',
+      style: 'normal',
+    },
+  ],
+  display: 'swap',
+  fallback: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+})
 
 interface ApointliLogoProps {
-  size?: number
-  showWordmark?: boolean
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  variant?: 'dark' | 'light'
+  showDot?: boolean
   className?: string
-  variant?: 'light' | 'dark'
+}
+
+const sizeMap = {
+  sm: 'text-2xl',
+  md: 'text-3xl',
+  lg: 'text-4xl',
+  xl: 'text-6xl',
 }
 
 export function ApointliLogo({
-  size = 40,
-  showWordmark = true,
-  className = '',
+  size = 'md',
   variant = 'dark',
+  showDot = true,
+  className = '',
 }: ApointliLogoProps) {
-  const textColor = variant === 'light' ? 'text-white' : 'text-[#0a1628]'
-  const taglineColor = variant === 'light' ? 'text-blue-100' : 'text-gray-400'
-  const iconColor = variant === 'light' ? '#ffffff' : '#2a44e8'
-  
-  return (
-    <div
-      className={`flex items-center gap-3 ${className}`}
-      aria-label="Apointli"
-    >
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 100 100"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        role="img"
-      >
-        {/*
-          Lowercase 'a' shape with location pin cut out of the center (negative space).
-          Everything below is a single filled path — the pin is created by drawing
-          the 'a' and the pin as one path using the evenodd fill rule.
-        */}
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="
-            M 50 12
-            C 27 12 10 30 10 52
-            C 10 62 13 71 19 78
-            C 24 84 34 90 50 90
-            C 62 90 74 86 82 78
-            C 86 74 90 66 90 56
-            L 90 40
-            C 90 36 87 33 83 33
-            C 79 33 76 36 76 40
-            L 76 52
-            C 76 68 66 78 50 78
-            C 35 78 24 68 24 52
-            C 24 36 35 26 50 26
-            C 58 26 65 29 70 35
-            L 82 30
-            C 75 19 63 12 50 12
-            Z
-            M 50 32
-            C 42 32 36 38 36 46
-            C 36 52 40 56 44 60
-            L 50 66
-            L 56 60
-            C 60 56 64 52 64 46
-            C 64 38 58 32 50 32
-            Z
-            M 50 42
-            C 53 42 56 45 56 48
-            C 56 51 53 54 50 54
-            C 47 54 44 51 44 48
-            C 44 45 47 42 50 42
-            Z
-          "
-          fill={iconColor}
-        />
-      </svg>
+  const colorClass = variant === 'light' ? 'text-white' : 'text-[#0a1628]'
+  const dotColor = variant === 'light' ? 'bg-blue-300' : 'bg-[#2a44e8]'
 
-      {showWordmark && (
-        <div>
-          <span className={`text-xl font-bold tracking-tight ${textColor}`}>
-            apointli
-          </span>
-          <div className={`text-[10px] font-medium tracking-wider ${taglineColor}`}>
-            Book. Manage. Grow.
-          </div>
-        </div>
+  return (
+    <span
+      className={`inline-flex items-baseline ${jakarta.className} ${sizeMap[size]} font-extrabold tracking-[-0.04em] ${colorClass} ${className}`}
+      aria-label="apointli"
+    >
+      apointli
+      {showDot && (
+        <span
+          className={`inline-block w-[0.18em] h-[0.18em] ml-[0.08em] rounded-full ${dotColor}`}
+          aria-hidden="true"
+        />
       )}
-    </div>
+    </span>
   )
 }
 
-// Icon only version for favicon and mobile
-export function ApointliIcon({ size = 32, className = '' }: { size?: number; className?: string }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-      role="img"
-    >
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="
-          M 50 12
-          C 27 12 10 30 10 52
-          C 10 62 13 71 19 78
-          C 24 84 34 90 50 90
-          C 62 90 74 86 82 78
-          C 86 74 90 66 90 56
-          L 90 40
-          C 90 36 87 33 83 33
-          C 79 33 76 36 76 40
-          L 76 52
-          C 76 68 66 78 50 78
-          C 35 78 24 68 24 52
-          C 24 36 35 26 50 26
-          C 58 26 65 29 70 35
-          L 82 30
-          C 75 19 63 12 50 12
-          Z
-          M 50 32
-          C 42 32 36 38 36 46
-          C 36 52 40 56 44 60
-          L 50 66
-          L 56 60
-          C 60 56 64 52 64 46
-          C 64 38 58 32 50 32
-          Z
-          M 50 42
-          C 53 42 56 45 56 48
-          C 56 51 53 54 50 54
-          C 47 54 44 51 44 48
-          C 44 45 47 42 50 42
-          Z
-        "
-        fill="#2a44e8"
-      />
-    </svg>
-  )
+export function ApointliMark({ size = 'md', variant = 'dark', className = '' }: Omit<ApointliLogoProps, 'showDot'>) {
+  return <ApointliLogo size={size} variant={variant} showDot={false} className={className} />
 }

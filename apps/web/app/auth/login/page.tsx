@@ -95,7 +95,7 @@ export default function LoginPage() {
         <div className="w-full max-w-sm">
           {/* Logo at top */}
           <div className="mb-6 flex justify-center lg:justify-start">
-            <ApointliLogo size={32} />
+            <ApointliLogo size="md" />
           </div>
 
           <div className="mb-6">
@@ -283,7 +283,7 @@ export default function LoginPage() {
         <div className="relative z-10 flex flex-col items-center text-white max-w-md">
           <div className="mb-6">
             <div className="w-24 h-24 sm:w-28 sm:h-28 xl:w-32 xl:h-32 bg-white/5 backdrop-blur-sm rounded-3xl flex items-center justify-center border border-white/10 shadow-2xl">
-              <ApointliLogo size={72} showWordmark={false} variant="light" />
+              <ApointliLogo size="xl" variant="light" />
             </div>
           </div>
           
@@ -296,26 +296,25 @@ export default function LoginPage() {
             Access your appointments, staff, and customers all in one place.
           </p>
           
-          <div className="mt-6 xl:mt-8 grid grid-cols-3 gap-4 xl:gap-6 w-full">
-            <div className="text-center">
-              <div className="text-2xl xl:text-3xl font-bold text-white">500+</div>
-              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Businesses</div>
+          <div className="mt-6 xl:mt-8 space-y-3 w-full">
+            <div className="flex items-center gap-3 text-blue-100/80">
+              <svg className="w-5 h-5 text-blue-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm">Free to start — no credit card required</span>
             </div>
-            <div className="text-center border-l border-r border-white/10">
-              <div className="text-2xl xl:text-3xl font-bold text-white">10K+</div>
-              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Appointments</div>
+            <div className="flex items-center gap-3 text-blue-100/80">
+              <svg className="w-5 h-5 text-blue-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm">Setup in minutes</span>
             </div>
-            <div className="text-center">
-              <div className="text-2xl xl:text-3xl font-bold text-white">98%</div>
-              <div className="text-[10px] xl:text-xs text-blue-200/70 mt-1">Satisfaction</div>
+            <div className="flex items-center gap-3 text-blue-100/80">
+              <svg className="w-5 h-5 text-blue-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="text-sm">Secure by design</span>
             </div>
-          </div>
-
-          <div className="mt-6 xl:mt-8 flex items-center gap-3 bg-white/5 backdrop-blur-sm px-5 xl:px-6 py-2.5 xl:py-3 rounded-full border border-white/10">
-            <svg className="w-4 h-4 xl:w-5 xl:h-5 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-            <span className="text-xs xl:text-sm text-blue-100/70">Trusted by businesses worldwide</span>
           </div>
         </div>
       </div>
