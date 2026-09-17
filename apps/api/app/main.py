@@ -1,7 +1,9 @@
+import traceback
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from app.api.v1.router import api_router
@@ -11,21 +13,14 @@ from app.core.database import engine
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup
     print(f"🚀 Apointli API starting in {settings.ENVIRONMENT} mode")
-
-    # Verify DB connection
     try:
         async with engine.begin() as conn:
-            result = await conn.execute(text("SELECT 1"))
-            result.scalar()
+            await conn.execute(text("SELECT 1"))
         print("✅ Database connection OK")
     except Exception as e:
         print(f"❌ Database connection FAILED: {type(e).__name__}: {e}")
-
     yield
-
-    # Shutdown
     await engine.dispose()
     print("👋 Apointli API shut down")
 
@@ -37,7 +32,6 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -46,7 +40,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Routes
+
+# ─── Global exception handler ───
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    print(f"💥 Unhandled error on {request.method} {request.url.path}")
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": "An unexpected error occurred"},
+    )
+
+
 app.include_router(api_router, prefix="/api/v1")
 
 
