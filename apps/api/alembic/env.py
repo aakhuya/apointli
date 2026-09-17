@@ -13,7 +13,7 @@ from app.core.database import Base
 
 # Import models so Alembic can detect them for autogeneration
 # (add new model modules here as we create them)
-from app.models import refresh_token, user  # noqa: F401
+from app.models import organization, organization_member, refresh_token, user  # noqa: F401
 
 # Alembic Config object
 config = context.config
