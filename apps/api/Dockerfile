@@ -1,37 +1,41 @@
 # Development stage
-FROM node:20-alpine AS development
+FROM python:3.12-slim AS development
 
 WORKDIR /app
 
-# Copy root package files
-COPY package*.json ./
-COPY apps/api/package*.json ./apps/api/
-COPY packages/shared-types/package*.json ./packages/shared-types/ 2>/dev/null || true
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
-RUN npm install
+# Install Python deps
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
+# Copy source
 COPY . .
-
-# Build stage
-FROM development AS builder
-
-WORKDIR /app
-RUN npm run build --workspace=api
-
-# Production stage
-FROM node:20-alpine AS production
-
-WORKDIR /app
-
-# Copy only necessary files
-COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
-COPY --from=builder /app/apps/api/package.json ./apps/api/
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/node_modules ./node_modules
 
 EXPOSE 3001
 
-CMD ["node", "apps/api/dist/main"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3001", "--reload"]
+
+
+# Production stage
+FROM python:3.12-slim AS production
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 3001
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3001", "--workers", "4"]

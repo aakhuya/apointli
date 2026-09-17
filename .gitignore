@@ -56,3 +56,14 @@ yarn-error.log*
 # Prisma
 apps/api/prisma/*.db
 apps/api/prisma/dev.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+*.log

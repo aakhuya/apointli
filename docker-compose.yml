@@ -1,10 +1,10 @@
-version: '3.8'
 
 services:
   # PostgreSQL Database
   postgres:
     image: postgres:16-alpine
     container_name: apointli-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: apointli
       POSTGRES_PASSWORD: apointli123
@@ -14,8 +14,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U apointli"]
-      interval: 10s
+      test: ["CMD-SHELL", "pg_isready -U apointli -d apointli"]
+      interval: 5s
       timeout: 5s
       retries: 5
     networks:
@@ -25,69 +25,16 @@ services:
   redis:
     image: redis:7-alpine
     container_name: apointli-redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - apointli-network
-
-  # Backend API
-  api:
-    build:
-      context: .
-      dockerfile: apps/api/Dockerfile
-      target: development
-    container_name: apointli-api
-    ports:
-      - "3001:3001"
-    environment:
-      NODE_ENV: development
-      DATABASE_URL: postgresql://apointli:apointli123@postgres:5432/apointli?schema=public
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      PORT: 3001
-      JWT_SECRET: dev-jwt-secret-do-not-use-in-production
-      JWT_REFRESH_SECRET: dev-refresh-secret-do-not-use-in-production
-    volumes:
-      - ./apps/api:/app/apps/api
-      - ./packages:/app/packages
-      - /app/apps/api/node_modules
-      - /app/packages/shared-types/node_modules
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    command: npm run start:dev --workspace=api
-    networks:
-      - apointli-network
-
-  # Frontend Web
-  web:
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
-      target: development
-    container_name: apointli-web
-    ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: development
-      NEXT_PUBLIC_API_URL: http://localhost:3001/api/v1
-    volumes:
-      - ./apps/web:/app/apps/web
-      - ./packages:/app/packages
-      - /app/apps/web/node_modules
-      - /app/packages/shared-types/node_modules
-    depends_on:
-      - api
-    command: npm run dev --workspace=web
     networks:
       - apointli-network
 

@@ -1,43 +1,40 @@
-# Dependencies
-node_modules/
-.pnp/
-.pnp.js
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv/
 
-# Testing
-coverage/
-*.log
-test-results/
-
-# Environment
+# Env
 .env
 .env.local
-.env.*.local
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Build
 dist/
 build/
-.next/
-out/
-
-# Database
-*.db
-*.sqlite
-prisma/*.db
+*.egg-info/
 
 # IDE
 .vscode/
 .idea/
 *.swp
-*.swo
-*~
-.DS_Store
 
 # OS
+.DS_Store
 Thumbs.db
 
-# Misc
-*.pem
-*.p12
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Logs
+*.log
+
+# mypy / ruff / black caches
+.mypy_cache/
+.ruff_cache/
