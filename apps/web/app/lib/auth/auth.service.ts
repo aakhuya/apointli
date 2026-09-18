@@ -234,3 +234,123 @@ export const locationApi = {
     await apiClient.delete(`/organizations/${orgId}/locations/${locationId}`)
   },
 }
+
+// ─── Staff domain ───
+export interface Staff {
+  id: string
+  user_id: string
+  email: string
+  first_name: string | null
+  last_name: string | null
+  title: string | null
+  bio: string | null
+  avatar_url: string | null
+  location_id: string | null
+  location_name: string | null
+  is_active: boolean
+  accepts_bookings: boolean
+}
+
+export interface CreateStaffData {
+  email: string
+  title?: string
+  bio?: string
+  location_id?: string | null
+  accepts_bookings?: boolean
+}
+
+export const staffApi = {
+  async list(orgId: string): Promise<Staff[]> {
+    const res = await apiClient.get<Staff[]>(
+      `/organizations/${orgId}/staff`,
+    )
+    return res.data
+  },
+  async create(orgId: string, data: CreateStaffData): Promise<Staff> {
+    const res = await apiClient.post<Staff>(
+      `/organizations/${orgId}/staff`,
+      data,
+    )
+    return res.data
+  },
+  async update(
+    orgId: string,
+    staffId: string,
+    data: Partial<CreateStaffData> & {
+      is_active?: boolean
+      avatar_url?: string | null
+    },
+  ): Promise<Staff> {
+    const res = await apiClient.patch<Staff>(
+      `/organizations/${orgId}/staff/${staffId}`,
+      data,
+    )
+    return res.data
+  },
+  async remove(orgId: string, staffId: string): Promise<void> {
+    await apiClient.delete(`/organizations/${orgId}/staff/${staffId}`)
+  },
+}
+
+// ─── Staff ↔ Services ───
+export interface StaffServiceItem {
+  service_id: string
+  name: string
+  duration_minutes: number
+  price: number | null
+  color: string
+  price_override: number | null
+  duration_override_minutes: number | null
+  effective_price: number | null
+  effective_duration_minutes: number
+  is_active: boolean
+}
+
+export interface AvailableService {
+  id: string
+  name: string
+  duration_minutes: number
+  price: number | null
+  color: string
+}
+
+export const staffServiceApi = {
+  async listAssigned(
+    orgId: string,
+    staffId: string,
+  ): Promise<StaffServiceItem[]> {
+    const res = await apiClient.get<StaffServiceItem[]>(
+      `/organizations/${orgId}/staff/${staffId}/services`,
+    )
+    return res.data
+  },
+  async listAvailable(
+    orgId: string,
+    staffId: string,
+  ): Promise<AvailableService[]> {
+    const res = await apiClient.get<AvailableService[]>(
+      `/organizations/${orgId}/staff/${staffId}/available-services`,
+    )
+    return res.data
+  },
+  async assign(
+    orgId: string,
+    staffId: string,
+    serviceId: string,
+  ): Promise<StaffServiceItem> {
+    const res = await apiClient.post<StaffServiceItem>(
+      `/organizations/${orgId}/staff/${staffId}/services`,
+      { service_id: serviceId },
+    )
+    return res.data
+  },
+  async unassign(
+    orgId: string,
+    staffId: string,
+    serviceId: string,
+  ): Promise<void> {
+    await apiClient.delete(
+      `/organizations/${orgId}/staff/${staffId}/services/${serviceId}`,
+    )
+  },
+}

@@ -6,6 +6,8 @@ from app.api.v1.endpoints import (
     locations,
     organizations,
     services,
+    staff,
+    staff_services,
 )
 
 api_router = APIRouter()
@@ -24,4 +26,14 @@ api_router.include_router(
     locations.router,
     prefix="/organizations/{org_id}/locations",
     tags=["locations"],
+)
+api_router.include_router(
+    staff.router,
+    prefix="/organizations/{org_id}/staff",
+    tags=["staff"],
+)
+api_router.include_router(
+    staff_services.router,
+    prefix="/organizations/{org_id}/staff",
+    tags=["staff-services"],
 )

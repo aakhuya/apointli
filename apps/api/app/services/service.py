@@ -7,13 +7,6 @@ from app.models.service import Service
 from app.schemas.service import CreateServiceRequest, UpdateServiceRequest
 
 
-class ServiceError(Exception):
-    def __init__(self, message: str, status_code: int = 400):
-        self.message = message
-        self.status_code = status_code
-        super().__init__(message)
-
-
 async def create_service(
     db: AsyncSession, org_id: uuid.UUID, payload: CreateServiceRequest
 ) -> Service:
@@ -69,5 +62,5 @@ async def update_service(
 
 
 async def delete_service(db: AsyncSession, service: Service) -> None:
-    service.is_active = False
+    await db.delete(service)
     await db.commit()
