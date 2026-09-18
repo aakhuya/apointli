@@ -115,3 +115,63 @@ export const orgService = {
     return res.data
   },
 }
+
+// ─── Service domain ───
+export interface Service {
+  id: string
+  name: string
+  description: string | null
+  duration_minutes: number
+  price: number | null
+  currency: string
+  color: string
+  buffer_before_minutes: number
+  buffer_after_minutes: number
+  is_active: boolean
+  is_bookable_online: boolean
+}
+
+export interface CreateServiceData {
+  name: string
+  description?: string
+  duration_minutes: number
+  price?: number
+  currency?: string
+  color?: string
+  buffer_before_minutes?: number
+  buffer_after_minutes?: number
+  is_bookable_online?: boolean
+}
+
+export const serviceApi = {
+  async list(orgId: string): Promise<Service[]> {
+    const res = await apiClient.get<Service[]>(
+      `/organizations/${orgId}/services`,
+    )
+    return res.data
+  },
+
+  async create(orgId: string, data: CreateServiceData): Promise<Service> {
+    const res = await apiClient.post<Service>(
+      `/organizations/${orgId}/services`,
+      data,
+    )
+    return res.data
+  },
+
+  async update(
+    orgId: string,
+    serviceId: string,
+    data: Partial<CreateServiceData> & { is_active?: boolean },
+  ): Promise<Service> {
+    const res = await apiClient.patch<Service>(
+      `/organizations/${orgId}/services/${serviceId}`,
+      data,
+    )
+    return res.data
+  },
+
+  async remove(orgId: string, serviceId: string): Promise<void> {
+    await apiClient.delete(`/organizations/${orgId}/services/${serviceId}`)
+  },
+}
