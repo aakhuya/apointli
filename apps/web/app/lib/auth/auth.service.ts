@@ -175,3 +175,62 @@ export const serviceApi = {
     await apiClient.delete(`/organizations/${orgId}/services/${serviceId}`)
   },
 }
+
+// ─── Location domain ───
+export interface Location {
+  id: string
+  name: string
+  is_primary: boolean
+  address: string | null
+  city: string | null
+  state: string | null
+  country: string | null
+  postal_code: string | null
+  phone: string | null
+  email: string | null
+  timezone: string
+  is_active: boolean
+}
+
+export interface CreateLocationData {
+  name: string
+  is_primary?: boolean
+  address?: string
+  city?: string
+  state?: string
+  country?: string
+  postal_code?: string
+  phone?: string
+  email?: string
+  timezone?: string
+}
+
+export const locationApi = {
+  async list(orgId: string): Promise<Location[]> {
+    const res = await apiClient.get<Location[]>(
+      `/organizations/${orgId}/locations`,
+    )
+    return res.data
+  },
+  async create(orgId: string, data: CreateLocationData): Promise<Location> {
+    const res = await apiClient.post<Location>(
+      `/organizations/${orgId}/locations`,
+      data,
+    )
+    return res.data
+  },
+  async update(
+    orgId: string,
+    locationId: string,
+    data: Partial<CreateLocationData> & { is_active?: boolean },
+  ): Promise<Location> {
+    const res = await apiClient.patch<Location>(
+      `/organizations/${orgId}/locations/${locationId}`,
+      data,
+    )
+    return res.data
+  },
+  async remove(orgId: string, locationId: string): Promise<void> {
+    await apiClient.delete(`/organizations/${orgId}/locations/${locationId}`)
+  },
+}

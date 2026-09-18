@@ -1,12 +1,30 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import { AuthProvider } from './providers/auth-provider'
 import { OrganizationProvider } from './providers/organization-provider'
 import { QueryProvider } from './providers/query-provider'
 import { ThemeProvider } from './providers/theme-provider'
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
+const inter = localFont({
+  src: [
+    {
+      path: './fonts/Inter-Variable.woff2',
+      weight: '100 900',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-inter',
+  display: 'swap',
+  fallback: [
+    'system-ui',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    'Segoe UI',
+    'Roboto',
+    'sans-serif',
+  ],
+})
 
 export const metadata: Metadata = {
   title: 'apointli — Smart Appointment Scheduling',
@@ -20,8 +38,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html
+      lang="en"
+      className={`${inter.variable} scroll-smooth`}
+      suppressHydrationWarning
+    >
+      <body className="font-sans antialiased">
         <ThemeProvider>
           <QueryProvider>
             <AuthProvider>
