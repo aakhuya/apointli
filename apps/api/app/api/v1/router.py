@@ -10,6 +10,7 @@ from app.api.v1.endpoints import (
     services,
     staff,
     staff_services,
+    time_off,
 )
 
 api_router = APIRouter()
@@ -44,4 +45,9 @@ api_router.include_router(
     schedules.router,
     prefix="/organizations/{org_id}/staff",
     tags=["schedules"],
+)
+api_router.include_router(
+    time_off.router,
+    prefix="/organizations/{org_id}/staff",
+    tags=["time-off"],
 )

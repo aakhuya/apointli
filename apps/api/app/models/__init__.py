@@ -6,6 +6,7 @@ from app.models.schedule import Schedule, ScheduleRule
 from app.models.service import Service
 from app.models.staff import StaffProfile
 from app.models.staff_service import StaffService
+from app.models.time_off import TimeOff
 from app.models.user import User
 
 __all__ = [
@@ -18,6 +19,7 @@ __all__ = [
     "StaffProfile",
     "Service",
     "StaffService",
+    "TimeOff",
     "Schedule",
     "ScheduleRule",
 ]

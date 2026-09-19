@@ -401,3 +401,46 @@ export const scheduleApi = {
     return res.data
   },
 }
+
+// ─── Time Off ───
+export interface TimeOff {
+  id: string
+  staff_id: string
+  start_date: string
+  end_date: string
+  start_time: string | null
+  end_time: string | null
+  reason: string | null
+  is_approved: boolean
+}
+
+export const timeOffApi = {
+  async list(orgId: string, staffId: string): Promise<TimeOff[]> {
+    const res = await apiClient.get<TimeOff[]>(
+      `/organizations/${orgId}/staff/${staffId}/time-off`,
+    )
+    return res.data
+  },
+  async create(
+    orgId: string,
+    staffId: string,
+    data: {
+      start_date: string
+      end_date: string
+      start_time?: string
+      end_time?: string
+      reason?: string
+    },
+  ): Promise<TimeOff> {
+    const res = await apiClient.post<TimeOff>(
+      `/organizations/${orgId}/staff/${staffId}/time-off`,
+      data,
+    )
+    return res.data
+  },
+  async remove(orgId: string, staffId: string, timeOffId: string): Promise<void> {
+    await apiClient.delete(
+      `/organizations/${orgId}/staff/${staffId}/time-off/${timeOffId}`,
+    )
+  },
+}

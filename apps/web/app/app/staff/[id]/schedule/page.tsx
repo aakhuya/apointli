@@ -9,8 +9,9 @@ import { Loader } from '@/app/components/Loader'
 import {
   scheduleApi,
   staffApi,
-  type ScheduleRule,
+  timeOffApi,
   type Staff,
+  type TimeOff,
 } from '@/app/lib/auth/auth.service'
 import { useOrganization } from '@/app/providers/organization-provider'
 
@@ -50,6 +51,15 @@ export default function ScheduleEditorPage() {
   const { currentOrg, isLoading: orgLoading } = useOrganization()
   const [staff, setStaff] = useState<Staff | null>(null)
   const [rules, setRules] = useState<RuleDraft[]>(defaultRules())
+  const [timeOff, setTimeOff] = useState<TimeOff[]>([])
+  const [showTimeOffForm, setShowTimeOffForm] = useState(false)
+  const [toForm, setToForm] = useState({
+    start_date: '',
+    end_date: '',
+    start_time: '',
+    end_time: '',
+    reason: '',
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -58,12 +68,14 @@ export default function ScheduleEditorPage() {
     if (!currentOrg || !params.id) return
     setIsLoading(true)
     try {
-      const [allStaff, existing] = await Promise.all([
+      const [allStaff, existing, toList] = await Promise.all([
         staffApi.list(currentOrg.id),
         scheduleApi.get(currentOrg.id, params.id),
+        timeOffApi.list(currentOrg.id, params.id),
       ])
       const found = allStaff.find((s) => s.id === params.id) || null
       setStaff(found)
+      setTimeOff(toList)
 
       if (existing && existing.rules.length > 0) {
         const mapped: RuleDraft[] = DAY_NAMES.map((_, i) => {
@@ -141,6 +153,43 @@ export default function ScheduleEditorPage() {
       setIsSaving(false)
     }
   }
+
+
+  const createTimeOff = async () => {
+    if (!currentOrg || !params.id) return
+    if (!toForm.start_date || !toForm.end_date) return
+    setError(null)
+    try {
+      await timeOffApi.create(currentOrg.id, params.id, {
+        start_date: toForm.start_date,
+        end_date: toForm.end_date,
+        start_time: toForm.start_time || undefined,
+        end_time: toForm.end_time || undefined,
+        reason: toForm.reason || undefined,
+      })
+      setToForm({ start_date: '', end_date: '', start_time: '', end_time: '', reason: '' })
+      setShowTimeOffForm(false)
+      const toList = await timeOffApi.list(currentOrg.id, params.id)
+      setTimeOff(toList)
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { detail?: unknown } } }
+      const detail = e.response?.data?.detail
+      setError(typeof detail === 'string' ? detail : 'Failed to add time off')
+    }
+  }
+
+  const deleteTimeOff = async (id: string) => {
+    if (!currentOrg || !params.id) return
+    if (!confirm('Delete this time off?')) return
+    try {
+      await timeOffApi.remove(currentOrg.id, params.id, id)
+      const toList = await timeOffApi.list(currentOrg.id, params.id)
+      setTimeOff(toList)
+    } catch {
+      setError('Failed to delete time off')
+    }
+  }
+
 
   if (orgLoading || isLoading) {
     return (
@@ -278,6 +327,131 @@ export default function ScheduleEditorPage() {
         >
           Cancel
         </Link>
+      </div>
+
+      {/* Time Off Section */}
+      <div className="mt-10">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+              Time off
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+              Block specific dates (vacation, sick days, appointments)
+            </p>
+          </div>
+          <button
+            onClick={() => setShowTimeOffForm(!showTimeOffForm)}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0a1628] dark:bg-blue-600 text-white rounded-lg text-sm font-medium"
+          >
+            {showTimeOffForm ? 'Cancel' : '+ Add time off'}
+          </button>
+        </div>
+
+        {showTimeOffForm && (
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  From date
+                </label>
+                <input
+                  type="date"
+                  value={toForm.start_date}
+                  onChange={(e) => setToForm({ ...toForm, start_date: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  To date
+                </label>
+                <input
+                  type="date"
+                  value={toForm.end_date}
+                  onChange={(e) => setToForm({ ...toForm, end_date: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+            </div>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+              Leave times blank for a full-day block. Or specify times for a partial-day block.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  Start time (optional)
+                </label>
+                <input
+                  type="time"
+                  value={toForm.start_time}
+                  onChange={(e) => setToForm({ ...toForm, start_time: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  End time (optional)
+                </label>
+                <input
+                  type="time"
+                  value={toForm.end_time}
+                  onChange={(e) => setToForm({ ...toForm, end_time: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                />
+              </div>
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                Reason (optional)
+              </label>
+              <input
+                type="text"
+                value={toForm.reason}
+                onChange={(e) => setToForm({ ...toForm, reason: e.target.value })}
+                placeholder="Vacation"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+              />
+            </div>
+            <button
+              onClick={createTimeOff}
+              className="mt-4 inline-flex items-center px-4 py-2.5 bg-[#0a1628] dark:bg-blue-600 text-white rounded-lg text-sm font-medium"
+            >
+              Add time off
+            </button>
+          </div>
+        )}
+
+        {timeOff.length === 0 ? (
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            No time off scheduled.
+          </div>
+        ) : (
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl divide-y divide-gray-100 dark:divide-gray-800">
+            {timeOff.map((t) => (
+              <div key={t.id} className="p-4 flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    {t.start_date}
+                    {t.start_date !== t.end_date && ` → ${t.end_date}`}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    {t.start_time && t.end_time
+                      ? `${t.start_time} – ${t.end_time}`
+                      : 'All day'}
+                    {t.reason && ` · ${t.reason}`}
+                  </p>
+                </div>
+                <button
+                  onClick={() => deleteTimeOff(t.id)}
+                  className="text-rose-600 dark:text-rose-400 hover:text-rose-700 text-sm font-medium flex-shrink-0"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
