@@ -128,6 +128,12 @@ function StaffCard({
           )}
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
+          <Link
+            href={`/app/staff/${staff.id}/schedule`}
+            className="inline-flex items-center gap-1 text-sm font-medium text-[#0a1628] dark:text-blue-400 hover:underline"
+          >
+            Schedule
+          </Link>
           <button
             onClick={() => setOpen(!open)}
             className="inline-flex items-center gap-1 text-sm font-medium text-[#0a1628] dark:text-blue-400 hover:underline"

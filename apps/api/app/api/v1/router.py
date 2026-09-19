@@ -6,6 +6,7 @@ from app.api.v1.endpoints import (
     locales,
     locations,
     organizations,
+    schedules,
     services,
     staff,
     staff_services,
@@ -38,4 +39,9 @@ api_router.include_router(
     staff_services.router,
     prefix="/organizations/{org_id}/staff",
     tags=["staff-services"],
+)
+api_router.include_router(
+    schedules.router,
+    prefix="/organizations/{org_id}/staff",
+    tags=["schedules"],
 )

@@ -304,7 +304,7 @@ export default function AppHome() {
                       fontSize: '12px',
                     }}
                     labelStyle={{ color: '#93c5fd', fontSize: '11px' }}
-                    formatter={(value: number) => [`KSh ${value.toLocaleString()}`, 'Revenue']}
+                    formatter={(value) => [`KSh ${Number(value).toLocaleString()}`, 'Revenue']}
                   />
                   <Line
                     type="monotone"

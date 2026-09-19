@@ -112,7 +112,7 @@ export function LocaleFields({
             <option value="UTC">UTC</option>
             {timezoneGroups.map((group) => (
               <optgroup key={group.region} label={group.region}>
-                {group.zones.map((tz) => (
+                {group.zones.map((tz: string) => (
                   <option key={tz} value={tz}>
                     {tz.replace(`${group.region}/`, '').replace(/_/g, ' ')}
                   </option>

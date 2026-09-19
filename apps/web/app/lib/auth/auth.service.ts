@@ -356,3 +356,48 @@ export const staffServiceApi = {
     )
   },
 }
+
+// ─── Schedule ───
+export interface ScheduleRule {
+  day_of_week: number
+  is_active: boolean
+  start_time: string | null
+  end_time: string | null
+  break_start: string | null
+  break_end: string | null
+}
+
+export interface Schedule {
+  id: string
+  staff_id: string
+  name: string
+  is_default: boolean
+  rules: ScheduleRule[]
+}
+
+export const scheduleApi = {
+  async get(orgId: string, staffId: string): Promise<Schedule | null> {
+    const res = await apiClient.get<Schedule | null>(
+      `/organizations/${orgId}/staff/${staffId}/schedule`,
+    )
+    return res.data
+  },
+  async update(
+    orgId: string,
+    staffId: string,
+    rules: Array<{
+      day_of_week: number
+      is_active: boolean
+      start_time?: string | null
+      end_time?: string | null
+      break_start?: string | null
+      break_end?: string | null
+    }>,
+  ): Promise<Schedule> {
+    const res = await apiClient.put<Schedule>(
+      `/organizations/${orgId}/staff/${staffId}/schedule`,
+      { rules },
+    )
+    return res.data
+  },
+}
