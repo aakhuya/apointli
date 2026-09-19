@@ -184,11 +184,12 @@ export interface Location {
   address: string | null
   city: string | null
   state: string | null
-  country: string | null
+  country_code: string | null
   postal_code: string | null
   phone: string | null
   email: string | null
   timezone: string
+  currency: string
   is_active: boolean
 }
 
@@ -198,11 +199,12 @@ export interface CreateLocationData {
   address?: string
   city?: string
   state?: string
-  country?: string
+  country_code?: string
   postal_code?: string
   phone?: string
   email?: string
   timezone?: string
+  currency?: string
 }
 
 export const locationApi = {

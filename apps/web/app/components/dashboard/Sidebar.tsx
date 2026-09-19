@@ -21,11 +21,12 @@ import { ApointliLogo } from '@/app/components/logo/ApointliLogo'
 const nav = [
   { label: 'Dashboard', href: '/app', icon: HomeIcon, exact: true },
   { label: 'Bookings', href: '/app/appointments', icon: Squares2X2Icon },
-  { label: 'My Business', href: '/app/business', icon: MapPinIcon },
   { label: 'Services', href: '/app/services', icon: WrenchScrewdriverIcon },
   { label: 'Staff', href: '/app/staff', icon: UserGroupIcon },
+  { label: 'Locations', href: '/app/locations', icon: MapPinIcon },
   { label: 'Customers', href: '/app/customers', icon: UsersIcon },
   { label: 'Calendar', href: '/app/calendar', icon: CalendarIcon },
+  { label: 'Availability', href: '/app/availability', icon: ClockIcon },
   { label: 'Analytics', href: '/app/analytics', icon: ChartBarIcon },
   { label: 'Reviews', href: '/app/reviews', icon: StarIcon },
   { label: 'Settings', href: '/app/settings', icon: Cog6ToothIcon },
@@ -36,14 +37,12 @@ export function Sidebar() {
 
   return (
     <aside className="hidden lg:flex lg:flex-col w-60 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800">
-      {/* Brand */}
       <div className="h-16 flex items-center px-5 border-b border-gray-100 dark:border-gray-800">
         <Link href="/app">
           <ApointliLogo size="md" />
         </Link>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
         {nav.map((item) => {
           const Icon = item.icon
@@ -67,7 +66,6 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Upgrade CTA */}
       <div className="p-3">
         <div className="rounded-xl bg-gradient-to-br from-[#0a1628] to-[#1a2a4a] dark:from-blue-900 dark:to-blue-700 p-4 text-white">
           <p className="text-xs font-semibold mb-1">Grow your business</p>

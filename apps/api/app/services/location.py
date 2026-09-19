@@ -32,11 +32,12 @@ async def create_location(
         address=payload.address,
         city=payload.city,
         state=payload.state,
-        country=payload.country,
+        country_code=payload.country_code,
         postal_code=payload.postal_code,
         phone=payload.phone,
         email=payload.email,
         timezone=payload.timezone,
+        currency=payload.currency,
     )
     db.add(location)
     await db.commit()
@@ -48,7 +49,7 @@ async def list_locations(db: AsyncSession, org_id: uuid.UUID) -> list[Location]:
     result = await db.execute(
         select(Location)
         .where(Location.organization_id == org_id)
-        .where(Location.is_active.is_(True))  # ← filter inactive
+        .where(Location.is_active.is_(True))
         .order_by(Location.is_primary.desc(), Location.name.asc())
     )
     return list(result.scalars().all())
@@ -67,9 +68,7 @@ async def get_location(
 
 
 async def update_location(
-    db: AsyncSession,
-    location: Location,
-    payload: UpdateLocationRequest,
+    db: AsyncSession, location: Location, payload: UpdateLocationRequest
 ) -> Location:
     data = payload.model_dump(exclude_unset=True)
 
@@ -90,6 +89,5 @@ async def update_location(
 
 
 async def delete_location(db: AsyncSession, location: Location) -> None:
-    # Hard delete: remove row completely
     await db.delete(location)
     await db.commit()

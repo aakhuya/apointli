@@ -23,11 +23,7 @@ from app.services.location import (
 
 router = APIRouter()
 
-MANAGER_ROLES = (
-    MemberRole.OWNER,
-    MemberRole.ADMIN,
-    MemberRole.MANAGER,
-)
+MANAGER_ROLES = (MemberRole.OWNER, MemberRole.ADMIN, MemberRole.MANAGER)
 
 
 def _to_response(loc: Location) -> LocationResponse:
@@ -38,11 +34,12 @@ def _to_response(loc: Location) -> LocationResponse:
         address=loc.address,
         city=loc.city,
         state=loc.state,
-        country=loc.country,
+        country_code=loc.country_code,
         postal_code=loc.postal_code,
         phone=loc.phone,
         email=loc.email,
         timezone=loc.timezone,
+        currency=loc.currency,
         is_active=loc.is_active,
     )
 

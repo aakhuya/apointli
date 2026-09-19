@@ -26,19 +26,20 @@ class Location(Base):
     name: Mapped[str] = mapped_column(String(150), nullable=False)
     is_primary: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
-    # Address
+    # Location
     address: Mapped[str | None] = mapped_column(String(255), nullable=True)
     city: Mapped[str | None] = mapped_column(String(100), nullable=True)
     state: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    country: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    country_code: Mapped[str | None] = mapped_column(String(2), nullable=True)
     postal_code: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # Contact
     phone: Mapped[str | None] = mapped_column(String(50), nullable=True)
     email: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
-    # Config
-    timezone: Mapped[str] = mapped_column(String(50), default="UTC", nullable=False)
+    # Locale
+    timezone: Mapped[str] = mapped_column(String(64), default="UTC", nullable=False)
+    currency: Mapped[str] = mapped_column(String(3), default="USD", nullable=False)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 

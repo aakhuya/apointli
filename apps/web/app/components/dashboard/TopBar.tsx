@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
+  Bars3Icon,
   BellIcon,
   ChevronDownIcon,
   MagnifyingGlassIcon,
@@ -14,7 +15,11 @@ import { useAuth } from '@/app/providers/auth-provider'
 import { useOrganization } from '@/app/providers/organization-provider'
 import { useTheme } from '@/app/providers/theme-provider'
 
-export function TopBar() {
+interface Props {
+  onOpenMobileMenu: () => void
+}
+
+export function TopBar({ onOpenMobileMenu }: Props) {
   const { user, logout } = useAuth()
   const { currentOrg } = useOrganization()
   const { resolvedTheme, toggle } = useTheme()
@@ -29,9 +34,18 @@ export function TopBar() {
     '?'
 
   return (
-    <header className="h-16 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center justify-between px-4 sm:px-6 gap-4">
-      {/* Search */}
-      <div className="flex-1 max-w-xl">
+    <header className="h-16 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center justify-between px-3 sm:px-6 gap-3">
+      {/* Mobile menu button */}
+      <button
+        onClick={onOpenMobileMenu}
+        aria-label="Open menu"
+        className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+      >
+        <Bars3Icon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+      </button>
+
+      {/* Search - hidden on very small screens */}
+      <div className="flex-1 max-w-xl hidden sm:block">
         <div className="relative">
           <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
@@ -39,13 +53,13 @@ export function TopBar() {
             placeholder="Search bookings, customers, or services..."
             className="w-full pl-10 pr-12 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500"
           />
-          <kbd className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded">
+          <kbd className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded">
             ⌘ K
           </kbd>
         </div>
       </div>
 
-      <div className="flex items-center gap-1 sm:gap-2">
+      <div className="flex items-center gap-0.5 sm:gap-2 ml-auto">
         {/* Theme toggle */}
         <button
           onClick={toggle}
@@ -69,7 +83,7 @@ export function TopBar() {
         <div className="relative">
           <button
             onClick={() => setUserOpen(!userOpen)}
-            className="flex items-center gap-2.5 pl-2 pr-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="flex items-center gap-2.5 sm:pl-2 pr-1 sm:pr-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0a1628] to-[#2a44e8] text-white flex items-center justify-center text-xs font-semibold flex-shrink-0">
               {initials}

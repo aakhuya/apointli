@@ -1,10 +1,7 @@
 'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useCallback, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 
 import { Loader } from '@/app/components/Loader'
 import {
@@ -13,15 +10,23 @@ import {
 } from '@/app/lib/auth/auth.service'
 import { useOrganization } from '@/app/providers/organization-provider'
 
-const schema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  country: z.string().optional(),
-  timezone: z.string().min(1),
-})
+interface FormState {
+  name: string
+  address: string
+  city: string
+  country_code: string
+  timezone: string
+  currency: string
+}
 
-type FormData = z.infer<typeof schema>
+const emptyForm: FormState = {
+  name: '',
+  address: '',
+  city: '',
+  country_code: 'KE',
+  timezone: 'Africa/Nairobi',
+  currency: 'KES',
+}
 
 export default function LocationsPage() {
   const { currentOrg, isLoading: orgLoading } = useOrganization()
@@ -29,24 +34,27 @@ export default function LocationsPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showCreate, setShowCreate] = useState(false)
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: { name: '', timezone: 'UTC' },
-  })
+  const [form, setForm] = useState<FormState>(emptyForm)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const load = useCallback(async () => {
     if (!currentOrg) return
     setIsLoading(true)
     try {
       setLocations(await locationApi.list(currentOrg.id))
-    } catch {
-      setError('Failed to load locations')
+    } catch (err: unknown) {
+      const e = err as { response?: { status?: number; data?: { detail?: unknown } } }
+      const status = e.response?.status ?? 'network error'
+      const detail = e.response?.data?.detail
+      setError(
+        `Failed to load locations (${status}): ${
+          typeof detail === 'string'
+            ? detail
+            : detail
+              ? JSON.stringify(detail)
+              : 'no details'
+        }`
+      )
     } finally {
       setIsLoading(false)
     }
@@ -60,15 +68,33 @@ export default function LocationsPage() {
     }
   }, [currentOrg, orgLoading, load])
 
-  const onCreate = async (data: FormData) => {
-    if (!currentOrg) return
+  const onCreate = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!currentOrg || !form.name.trim()) return
+    setIsSubmitting(true)
+    setError(null)
     try {
-      await locationApi.create(currentOrg.id, data)
-      reset()
+      await locationApi.create(currentOrg.id, {
+        name: form.name,
+        address: form.address || undefined,
+        city: form.city || undefined,
+        country_code: form.country_code || undefined,
+        timezone: form.timezone,
+        currency: form.currency,
+      })
+      setForm(emptyForm)
       setShowCreate(false)
       await load()
-    } catch {
-      setError('Failed to create location')
+    } catch (err: unknown) {
+      const e = err as { response?: { data?: { detail?: unknown } } }
+      const detail = e.response?.data?.detail
+      setError(
+        typeof detail === 'string'
+          ? detail
+          : 'Failed to create location. Check your inputs.',
+      )
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -140,34 +166,73 @@ export default function LocationsPage() {
           <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
             New location
           </h2>
-          <form onSubmit={handleSubmit(onCreate)} className="space-y-4">
+          <form onSubmit={onCreate} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                Name
+              </label>
+              <input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                placeholder="Main Branch"
+                required
+              />
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Name
+                  Country code
                 </label>
                 <input
-                  {...register('name')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
-                  placeholder="Main Branch"
+                  value={form.country_code}
+                  onChange={(e) =>
+                    setForm({ ...form, country_code: e.target.value.toUpperCase() })
+                  }
+                  maxLength={2}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm uppercase"
+                  placeholder="KE"
                 />
-                {errors.name && (
-                  <p className="mt-1 text-xs text-rose-600">{errors.name.message}</p>
-                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                   Timezone
                 </label>
-                <select
-                  {...register('timezone')}
+                <input
+                  value={form.timezone}
+                  onChange={(e) => setForm({ ...form, timezone: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
-                >
-                  <option value="UTC">UTC</option>
-                  <option value="Africa/Nairobi">Africa/Nairobi (EAT)</option>
-                  <option value="America/New_York">America/New York (ET)</option>
-                  <option value="Europe/London">Europe/London (GMT/BST)</option>
-                </select>
+                  placeholder="Africa/Nairobi"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  Currency
+                </label>
+                <input
+                  value={form.currency}
+                  onChange={(e) =>
+                    setForm({ ...form, currency: e.target.value.toUpperCase() })
+                  }
+                  maxLength={3}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm uppercase"
+                  placeholder="KES"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  City
+                </label>
+                <input
+                  value={form.city}
+                  onChange={(e) => setForm({ ...form, city: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  placeholder="Nairobi"
+                />
               </div>
             </div>
 
@@ -176,36 +241,14 @@ export default function LocationsPage() {
                 Address
               </label>
               <input
-                {...register('address')}
+                value={form.address}
+                onChange={(e) => setForm({ ...form, address: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                 placeholder="123 Kenyatta Avenue"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  City
-                </label>
-                <input
-                  {...register('city')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
-                  placeholder="Nairobi"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                  Country
-                </label>
-                <input
-                  {...register('country')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
-                  placeholder="Kenya"
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3">
+            <div className="flex gap-3 pt-2">
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -217,7 +260,7 @@ export default function LocationsPage() {
               <button
                 type="button"
                 onClick={() => {
-                  reset()
+                  setForm(emptyForm)
                   setShowCreate(false)
                 }}
                 className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
@@ -243,7 +286,7 @@ export default function LocationsPage() {
           {locations.map((loc) => (
             <div
               key={loc.id}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-start justify-between"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-start justify-between gap-3"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -258,14 +301,14 @@ export default function LocationsPage() {
                 </div>
                 {(loc.address || loc.city) && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">
-                    {[loc.address, loc.city, loc.country]
-                      .filter(Boolean)
-                      .join(', ')}
+                    {[loc.address, loc.city].filter(Boolean).join(', ')}
                   </p>
                 )}
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
-                  {loc.timezone}
-                </p>
+                <div className="flex items-center gap-3 mt-1 text-xs text-gray-400 dark:text-gray-500">
+                  <span>{loc.timezone}</span>
+                  <span>·</span>
+                  <span>{loc.currency}</span>
+                </div>
               </div>
               <button
                 onClick={() => onDelete(loc.id)}
