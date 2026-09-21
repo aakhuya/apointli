@@ -15,21 +15,18 @@ class StaffProfile(Base):
     id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
-
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-
     organization_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("organizations.id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
-
     location_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("locations.id", ondelete="SET NULL"),
@@ -37,12 +34,10 @@ class StaffProfile(Base):
         index=True,
     )
 
-    # Profile info
     title: Mapped[str | None] = mapped_column(String(100), nullable=True)
     bio: Mapped[str | None] = mapped_column(Text, nullable=True)
     avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
-    # Settings
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     accepts_bookings: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
 
@@ -56,7 +51,6 @@ class StaffProfile(Base):
         nullable=False,
     )
 
-    # Relationships
     user: Mapped["User"] = relationship("User")  # type: ignore # noqa: F821
     organization: Mapped["Organization"] = relationship("Organization")  # type: ignore # noqa: F821
     location: Mapped["Location | None"] = relationship("Location")  # type: ignore # noqa: F821

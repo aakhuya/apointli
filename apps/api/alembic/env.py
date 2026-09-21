@@ -14,6 +14,7 @@ from app.core.database import Base
 # Import models so Alembic can detect them for autogeneration
 # (add new model modules here as we create them)
 from app.models import (  # noqa: F401
+    appointment,
     location,
     organization,
     organization_member,
