@@ -9,6 +9,7 @@ import {
   PlusIcon,
 } from '@heroicons/react/24/outline'
 
+import { BookingModal } from '@/app/components/booking/BookingModal'
 import { Loader } from '@/app/components/Loader'
 import { Badge } from '@/app/components/ui/Badge'
 import { Button } from '@/app/components/ui/Button'
@@ -20,7 +21,10 @@ import {
 } from '@/app/lib/auth/auth.service'
 import { useOrganization } from '@/app/providers/organization-provider'
 
-const STATUS_VARIANTS: Record<string, 'success' | 'warning' | 'info' | 'neutral' | 'danger'> = {
+const STATUS_VARIANTS: Record<
+  string,
+  'success' | 'warning' | 'info' | 'neutral' | 'danger'
+> = {
   SCHEDULED: 'warning',
   CONFIRMED: 'success',
   CHECKED_IN: 'info',
@@ -38,7 +42,7 @@ function formatDate(date: Date): string {
 function startOfWeek(d: Date): Date {
   const result = new Date(d)
   const day = result.getDay()
-  const diff = result.getDate() - day + (day === 0 ? -6 : 1) // Monday start
+  const diff = result.getDate() - day + (day === 0 ? -6 : 1)
   result.setDate(diff)
   result.setHours(0, 0, 0, 0)
   return result
@@ -52,7 +56,11 @@ function addDays(d: Date, days: number): Date {
 
 function formatTime(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+  return d.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
 }
 
 function formatDateLong(d: Date): string {
@@ -73,6 +81,7 @@ export default function AppointmentsPage() {
 
   const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date()))
   const [staffFilter, setStaffFilter] = useState<string>('')
+  const [bookingOpen, setBookingOpen] = useState(false)
 
   const load = useCallback(async () => {
     if (!currentOrg) return
@@ -94,7 +103,9 @@ export default function AppointmentsPage() {
       setAppointments(appts)
       setStaff(staffList)
     } catch (err: unknown) {
-      const e = err as { response?: { status?: number; data?: { detail?: string } } }
+      const e = err as {
+        response?: { status?: number; data?: { detail?: string } }
+      }
       setError(
         `Failed to load appointments (${e.response?.status ?? 'network error'})`,
       )
@@ -111,7 +122,6 @@ export default function AppointmentsPage() {
     }
   }, [orgLoading, currentOrg, load])
 
-  // Group appointments by day
   const byDay = useMemo(() => {
     const map: Record<string, Appointment[]> = {}
     for (const a of appointments) {
@@ -125,15 +135,20 @@ export default function AppointmentsPage() {
     return map
   }, [appointments])
 
-  const days = useMemo(() => {
-    return Array.from({ length: 7 }, (_, i) => addDays(weekStart, i))
-  }, [weekStart])
+  const days = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
+    [weekStart],
+  )
 
   const cancelAppointment = async (a: Appointment) => {
     if (!currentOrg) return
     if (!confirm(`Cancel ${a.customer?.name}'s appointment?`)) return
     try {
-      await appointmentApi.cancel(currentOrg.id, a.id, 'Cancelled from dashboard')
+      await appointmentApi.cancel(
+        currentOrg.id,
+        a.id,
+        'Cancelled from dashboard',
+      )
       await load()
     } catch {
       setError('Failed to cancel appointment')
@@ -168,7 +183,8 @@ export default function AppointmentsPage() {
             Appointments
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {appointments.length} appointment{appointments.length === 1 ? '' : 's'} this week
+            {appointments.length} appointment
+            {appointments.length === 1 ? '' : 's'} this week
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -188,6 +204,7 @@ export default function AppointmentsPage() {
             variant="primary"
             size="md"
             className="whitespace-nowrap"
+            onClick={() => setBookingOpen(true)}
           >
             <PlusIcon className="w-4 h-4" />
             New booking
@@ -243,7 +260,7 @@ export default function AppointmentsPage() {
             No appointments this week
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Appointments will appear here when bookings are made.
+            Click <strong>New booking</strong> to create your first.
           </p>
         </div>
       ) : (
@@ -272,7 +289,11 @@ export default function AppointmentsPage() {
                   <p className="text-[10px] font-medium uppercase tracking-wide opacity-80">
                     {day.toLocaleDateString([], { weekday: 'short' })}
                   </p>
-                  <p className={`text-lg font-bold ${isToday ? '' : 'text-gray-900 dark:text-white'}`}>
+                  <p
+                    className={`text-lg font-bold ${
+                      isToday ? '' : 'text-gray-900 dark:text-white'
+                    }`}
+                  >
                     {day.getDate()}
                   </p>
                 </div>
@@ -286,14 +307,16 @@ export default function AppointmentsPage() {
                     dayAppts.map((a) => (
                       <div
                         key={a.id}
-                        className="bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 cursor-pointer transition-colors group"
+                        className="bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors group"
                       >
                         <div className="flex items-center justify-between mb-1">
                           <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400">
                             {formatTime(a.start_time)}
                           </span>
                           <Badge variant={STATUS_VARIANTS[a.status] || 'neutral'}>
-                            <span className="text-[9px]">{a.status.slice(0, 3)}</span>
+                            <span className="text-[9px]">
+                              {a.status.slice(0, 3)}
+                            </span>
                           </Badge>
                         </div>
                         <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
@@ -324,6 +347,15 @@ export default function AppointmentsPage() {
             )
           })}
         </div>
+      )}
+
+      {currentOrg && (
+        <BookingModal
+          open={bookingOpen}
+          onClose={() => setBookingOpen(false)}
+          orgId={currentOrg.id}
+          onCreated={() => void load()}
+        />
       )}
     </div>
   )

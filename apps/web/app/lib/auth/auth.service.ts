@@ -523,3 +523,31 @@ export const appointmentApi = {
     return res.data
   },
 }
+
+// ─── Availability ───
+export interface AvailabilitySlot {
+  start: string
+  end: string
+  local_start: string
+  local_end: string
+  timezone: string
+}
+
+export interface AvailabilityResponse {
+  date: string
+  timezone: string
+  slots: AvailabilitySlot[]
+}
+
+export const availabilityApi = {
+  async list(
+    orgId: string,
+    params: { staff_id: string; service_id: string; date: string },
+  ): Promise<AvailabilityResponse> {
+    const res = await apiClient.get<AvailabilityResponse>(
+      `/organizations/${orgId}/availability`,
+      { params },
+    )
+    return res.data
+  },
+}
