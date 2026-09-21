@@ -444,3 +444,82 @@ export const timeOffApi = {
     )
   },
 }
+
+// ─── Appointments ───
+export interface AppointmentCustomer {
+  id: string
+  name: string
+  email: string | null
+  phone: string | null
+}
+
+export interface Appointment {
+  id: string
+  staff_id: string
+  staff_name: string
+  service_id: string | null
+  service_name: string | null
+  location_id: string | null
+  customer: AppointmentCustomer | null
+  start_time: string
+  end_time: string
+  status: string
+  duration_minutes: number
+  price: number | null
+  currency: string
+  notes: string | null
+  created_at: string
+}
+
+export interface CreateAppointmentData {
+  staff_id: string
+  service_id: string
+  location_id?: string
+  customer_id?: string
+  customer_name?: string
+  customer_email?: string
+  customer_phone?: string
+  start_time: string
+  notes?: string
+}
+
+export const appointmentApi = {
+  async list(
+    orgId: string,
+    params?: { from_date?: string; to_date?: string; staff_id?: string },
+  ): Promise<Appointment[]> {
+    const res = await apiClient.get<Appointment[]>(
+      `/organizations/${orgId}/appointments`,
+      { params },
+    )
+    return res.data
+  },
+  async get(orgId: string, id: string): Promise<Appointment> {
+    const res = await apiClient.get<Appointment>(
+      `/organizations/${orgId}/appointments/${id}`,
+    )
+    return res.data
+  },
+  async create(
+    orgId: string,
+    data: CreateAppointmentData,
+  ): Promise<Appointment> {
+    const res = await apiClient.post<Appointment>(
+      `/organizations/${orgId}/appointments`,
+      data,
+    )
+    return res.data
+  },
+  async cancel(
+    orgId: string,
+    id: string,
+    reason?: string,
+  ): Promise<Appointment> {
+    const res = await apiClient.post<Appointment>(
+      `/organizations/${orgId}/appointments/${id}/cancel`,
+      null,
+      { params: reason ? { reason } : {} },
+    )
+    return res.data
+  },
+}
