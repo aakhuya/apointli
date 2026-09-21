@@ -10,8 +10,6 @@ from app.core.database import Base
 
 
 class Schedule(Base):
-    """A named set of working hours for a staff member."""
-
     __tablename__ = "schedules"
 
     id: Mapped[uuid.UUID] = mapped_column(
@@ -48,8 +46,6 @@ class Schedule(Base):
 
 
 class ScheduleRule(Base):
-    """One recurring rule inside a schedule (e.g., Monday 9-5 with lunch break)."""
-
     __tablename__ = "schedule_rules"
     __table_args__ = (
         UniqueConstraint("schedule_id", "day_of_week", name="uq_schedule_day"),
@@ -65,13 +61,13 @@ class ScheduleRule(Base):
         index=True,
     )
 
-    # 0 = Monday, 6 = Sunday (Python's weekday())
+    # 0 = Monday, 6 = Sunday
     day_of_week: Mapped[int] = mapped_column(Integer, nullable=False)
 
-    start_time: Mapped[object] = mapped_column(Time, nullable=False)
-    end_time: Mapped[object] = mapped_column(Time, nullable=False)
+    # Nullable because "off" days have no hours
+    start_time: Mapped[object | None] = mapped_column(Time, nullable=True)
+    end_time: Mapped[object | None] = mapped_column(Time, nullable=True)
 
-    # Optional break window
     break_start: Mapped[object | None] = mapped_column(Time, nullable=True)
     break_end: Mapped[object | None] = mapped_column(Time, nullable=True)
 

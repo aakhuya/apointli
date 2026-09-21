@@ -13,18 +13,17 @@ import uuid
 from datetime import date, datetime, time as dt_time, timedelta
 from zoneinfo import ZoneInfo
 
-from sqlalchemy import and_, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.models.appointment import Appointment, AppointmentStatus  # type: ignore
+from app.models.appointment import Appointment, AppointmentStatus
 from app.models.schedule import Schedule, ScheduleRule
 from app.models.service import Service
 from app.models.staff import StaffProfile
 from app.models.time_off import TimeOff
 
 
-# Slot granularity — the interval between candidate slot start times
 SLOT_GRANULARITY_MINUTES = 15
 
 
@@ -44,7 +43,6 @@ def _from_minutes(m: int) -> dt_time:
 
 
 def _overlap(a_start: int, a_end: int, b_start: int, b_end: int) -> bool:
-    """True if [a_start, a_end) overlaps [b_start, b_end)."""
     return a_start < b_end and b_start < a_end
 
 
@@ -55,30 +53,28 @@ async def compute_availability(
     target_date: date,
     granularity_minutes: int = SLOT_GRANULARITY_MINUTES,
 ) -> list[dict]:
-    """
-    Return list of {start: ISO8601 UTC, end: ISO8601 UTC, local_start: "HH:MM"}
-    for all bookable slots.
-    """
-    # 1. Load staff with location (for timezone)
+    # 1. Load staff with location + organization (eager load to avoid lazy-load crash)
     result = await db.execute(
         select(StaffProfile)
-        .options(selectinload(StaffProfile.location))
+        .options(
+            selectinload(StaffProfile.location),
+            selectinload(StaffProfile.organization),
+        )
         .where(StaffProfile.id == staff_id)
     )
     staff = result.scalar_one_or_none()
     if not staff:
         raise AvailabilityError("Staff member not found", status_code=404)
 
-    # Determine timezone
+    # Determine timezone: staff.location → staff.organization → UTC
     tz_name = "UTC"
     if staff.location and staff.location.timezone:
         tz_name = staff.location.timezone
-    elif staff.organization and staff.organization.timezone:  # type: ignore
-        tz_name = staff.organization.timezone  # type: ignore
+    elif staff.organization and staff.organization.timezone:
+        tz_name = staff.organization.timezone
     tz = ZoneInfo(tz_name)
 
-    # 2. Get the schedule rule for this weekday
-    # Python's weekday(): Monday=0 ... Sunday=6
+    # 2. Get the schedule rule for this weekday (Mon=0 ... Sun=6)
     day_of_week = target_date.weekday()
 
     result = await db.execute(
@@ -91,7 +87,7 @@ async def compute_availability(
     rule = result.scalar_one_or_none()
 
     if not rule or not rule.is_active or not rule.start_time or not rule.end_time:
-        return []  # staff doesn't work this day
+        return []
 
     work_start = _to_minutes(rule.start_time)
     work_end = _to_minutes(rule.end_time)
@@ -106,7 +102,6 @@ async def compute_availability(
     total_duration = buffer_before + duration + buffer_after
 
     # 4. Load existing appointments for this date (in UTC, then convert to local)
-    # Staff's local day
     local_start = datetime.combine(target_date, dt_time(0, 0, 0), tzinfo=tz)
     local_end = local_start + timedelta(days=1)
     utc_start = local_start.astimezone(ZoneInfo("UTC"))
@@ -114,7 +109,7 @@ async def compute_availability(
 
     result = await db.execute(
         select(Appointment)
-        .where(Appointment.staff_profile_id == staff_id)
+        .where(Appointment.staff_id == staff_id)
         .where(Appointment.start_time < utc_end)
         .where(Appointment.end_time > utc_start)
         .where(
@@ -130,25 +125,26 @@ async def compute_availability(
     )
     appointments = list(result.scalars().all())
 
-    # Convert appointments to local minutes-of-day
     blocked_by_appointments: list[tuple[int, int]] = []
     for appt in appointments:
         local_a_start = appt.start_time.astimezone(tz)
         local_a_end = appt.end_time.astimezone(tz)
-        # Only consider blocks that fall on this date
-        if local_a_start.date() == target_date:
+
+        if local_a_start.date() == target_date and local_a_end.date() == target_date:
             blocked_by_appointments.append(
                 (
                     local_a_start.hour * 60 + local_a_start.minute,
                     local_a_end.hour * 60 + local_a_end.minute,
                 )
             )
-        # An appointment that starts the previous day and bleeds into today
-        elif local_a_start.date() < target_date < local_a_end.date():
+        elif local_a_start.date() < target_date <= local_a_end.date():
+            # Bleeds into today from before
             blocked_by_appointments.append((0, local_a_end.hour * 60 + local_a_end.minute))
-        # An appointment that starts today and bleeds into tomorrow
         elif local_a_start.date() == target_date and local_a_end.date() > target_date:
-            blocked_by_appointments.append((local_a_start.hour * 60 + local_a_start.minute, 24 * 60))
+            # Bleeds into tomorrow
+            blocked_by_appointments.append(
+                (local_a_start.hour * 60 + local_a_start.minute, 24 * 60)
+            )
 
     # 5. Load time-off covering this date
     result = await db.execute(
@@ -162,12 +158,8 @@ async def compute_availability(
     blocked_by_time_off: list[tuple[int, int]] = []
     for t in time_offs:
         if t.start_time and t.end_time:
-            # Partial day — only applies if the target date is within range
-            blocked_by_time_off.append(
-                (_to_minutes(t.start_time), _to_minutes(t.end_time))
-            )
+            blocked_by_time_off.append((_to_minutes(t.start_time), _to_minutes(t.end_time)))
         else:
-            # Full day
             blocked_by_time_off.append((0, 24 * 60))
 
     # 6. Generate candidate slots and filter
@@ -178,35 +170,26 @@ async def compute_availability(
     while slot_start + total_duration <= work_end:
         slot_end = slot_start + total_duration
 
-        # a) Must not overlap break
         if break_start is not None and break_end is not None:
             if _overlap(slot_start, slot_end, break_start, break_end):
                 slot_start += granularity_minutes
                 continue
 
-        # b) Must not overlap appointments
         if any(_overlap(slot_start, slot_end, a, b) for a, b in blocked_by_appointments):
             slot_start += granularity_minutes
             continue
 
-        # c) Must not overlap time-off
         if any(_overlap(slot_start, slot_end, a, b) for a, b in blocked_by_time_off):
             slot_start += granularity_minutes
             continue
 
-        # d) Must be in the future (account for buffer_before)
-        slot_local_start = datetime.combine(
-            target_date, _from_minutes(slot_start), tzinfo=tz
-        )
-        # The "commit" moment is when the actual service starts,
-        # so check now against (slot_start + buffer_before)
+        slot_local_start = datetime.combine(target_date, _from_minutes(slot_start), tzinfo=tz)
         commit_local = slot_local_start + timedelta(minutes=buffer_before)
         commit_utc = commit_local.astimezone(ZoneInfo("UTC"))
         if commit_utc <= now_utc:
             slot_start += granularity_minutes
             continue
 
-        # Slot is valid — compute UTC boundaries of the *service* (not buffers)
         service_local_start = slot_local_start + timedelta(minutes=buffer_before)
         service_local_end = service_local_start + timedelta(minutes=duration)
 
