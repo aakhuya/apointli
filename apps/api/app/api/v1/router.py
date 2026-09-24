@@ -8,6 +8,7 @@ from app.api.v1.endpoints import (
     locales,
     locations,
     organizations,
+    public,
     schedules,
     services,
     staff,
@@ -20,6 +21,13 @@ api_router = APIRouter()
 api_router.include_router(health.router, prefix="/health", tags=["health"])
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
 api_router.include_router(locales.router, prefix="/locales", tags=["locales"])
+
+# Public (unauthenticated) endpoints
+api_router.include_router(
+    public.router, prefix="/public/businesses", tags=["public"]
+)
+
+# Authenticated (tenant-scoped) endpoints
 api_router.include_router(
     organizations.router, prefix="/organizations", tags=["organizations"]
 )
