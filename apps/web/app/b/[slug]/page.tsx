@@ -68,12 +68,10 @@ export default function PublicBusinessPage() {
           <div className="flex justify-center mb-6">
             <ApointliLogo size="md" />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Business not found
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900">Business not found</h1>
           <p className="text-gray-500 mt-2">
-            The business you're looking for doesn't exist or is not currently
-            accepting bookings.
+            The business you're looking for doesn't exist or isn't accepting
+            bookings right now.
           </p>
           <Link
             href="/"
@@ -89,12 +87,12 @@ export default function PublicBusinessPage() {
   const primaryLocation = business.locations[0]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b border-gray-100">
+      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <Link href="/">
-            <ApointliLogo size="md" />
+          <Link href="/" className="flex items-center gap-2">
+            <ApointliLogo size="sm" />
           </Link>
           <Link
             href={`/b/${business.slug}/book`}
@@ -106,54 +104,70 @@ export default function PublicBusinessPage() {
       </header>
 
       {/* Cover */}
-      <div className="relative h-48 sm:h-64 bg-gradient-to-br from-[#0a1628] via-[#1a2a4a] to-[#2a3a5a]">
-        {business.cover_url && (
+      <div className="relative h-48 sm:h-64 bg-gradient-to-br from-[#0a1628] via-[#1a2a4a] to-[#2a3a5a] overflow-hidden">
+        {business.cover_url ? (
           <img
             src={business.cover_url}
-            alt={business.name}
+            alt=""
             className="w-full h-full object-cover"
           />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center opacity-10">
+            <span className="text-[12rem] font-bold text-white select-none">
+              {business.name[0]}
+            </span>
+          </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </div>
 
-      {/* Business info */}
+      {/* Business info — sits cleanly below the cover */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative -mt-12 sm:-mt-16 flex flex-col sm:flex-row sm:items-end gap-6">
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl bg-white dark:bg-gray-900 border-4 border-white shadow-xl flex items-center justify-center overflow-hidden flex-shrink-0">
-            {business.logo_url ? (
-              <img
-                src={business.logo_url}
-                alt={business.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <span className="text-4xl font-bold text-[#0a1628]">
-                {business.name[0]}
-              </span>
-            )}
-          </div>
-
-          <div className="flex-1 pb-4">
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
-              {business.name}
-            </h1>
-            <div className="flex flex-wrap items-center gap-4 mt-2 text-sm text-gray-600">
-              {primaryLocation?.city && (
-                <span className="flex items-center gap-1.5">
-                  <MapPinIcon className="w-4 h-4" />
-                  {primaryLocation.city}
-                  {primaryLocation.country_code && `, ${primaryLocation.country_code}`}
+        <div className="pt-6 sm:pt-8">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-5 sm:gap-6">
+            {/* Logo — pulled up into the cover */}
+            <div className="-mt-20 sm:-mt-24 w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white border-4 border-white shadow-xl flex items-center justify-center overflow-hidden flex-shrink-0 relative z-10">
+              {business.logo_url ? (
+                <img
+                  src={business.logo_url}
+                  alt={business.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span className="text-3xl sm:text-4xl font-bold text-[#0a1628]">
+                  {business.name[0]}
                 </span>
               )}
-              <span className="flex items-center gap-1.5">
-                <ClockIcon className="w-4 h-4" />
-                {business.timezone}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <StarIcon className="w-4 h-4 text-amber-500" />
-                New on apointli
-              </span>
+            </div>
+
+            {/* Name + meta — pushes cleanly */}
+            <div className="flex-1 min-w-0 pt-0 sm:pt-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 break-words">
+                {business.name}
+              </h1>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 text-sm text-gray-600">
+                {primaryLocation?.city && (
+                  <span className="flex items-center gap-1.5">
+                    <MapPinIcon className="w-4 h-4 text-gray-400" />
+                    {primaryLocation.city}
+                    {primaryLocation.country_code && `, ${primaryLocation.country_code}`}
+                  </span>
+                )}
+                <span className="flex items-center gap-1.5">
+                  <ClockIcon className="w-4 h-4 text-gray-400" />
+                  {business.timezone.replace('_', ' ')}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <StarIcon className="w-4 h-4 text-amber-500" />
+                  <span className="text-amber-600 font-medium">New on apointli</span>
+                </span>
+              </div>
+
+              {business.description && (
+                <p className="mt-4 text-gray-600 leading-relaxed max-w-3xl">
+                  {business.description}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -176,58 +190,49 @@ export default function PublicBusinessPage() {
           </div>
         </div>
 
-        {/* About + Contact */}
-        {(business.description || business.phone || business.email || business.website) && (
-          <div className="mt-12 grid lg:grid-cols-3 gap-8">
-            {business.description && (
-              <div className="lg:col-span-2">
-                <h2 className="text-lg font-semibold text-gray-900 mb-3">About</h2>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-line">
-                  {business.description}
-                </p>
-              </div>
-            )}
-            <div className={business.description ? '' : 'lg:col-span-3'}>
-              <h2 className="text-lg font-semibold text-gray-900 mb-3">Contact</h2>
-              <div className="space-y-3 text-sm">
-                {business.phone && (
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <PhoneIcon className="w-4 h-4 text-gray-400" />
-                    {business.phone}
-                  </div>
-                )}
-                {business.email && (
-                  <div className="flex items-center gap-3 text-gray-600">
-                    <span className="w-4 h-4 text-gray-400 text-center">@</span>
-                    {business.email}
-                  </div>
-                )}
-                {business.website && (
-                  <a
-                    href={business.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-[#0a1628] hover:underline"
-                  >
-                    <GlobeAltIcon className="w-4 h-4 text-gray-400" />
-                    {business.website}
-                  </a>
-                )}
-                {primaryLocation?.address && (
-                  <div className="flex items-start gap-3 text-gray-600">
-                    <MapPinIcon className="w-4 h-4 text-gray-400 mt-0.5" />
-                    <span>
-                      {primaryLocation.address}
-                      {primaryLocation.city && (
-                        <>
-                          <br />
-                          {primaryLocation.city}
-                        </>
-                      )}
-                    </span>
-                  </div>
-                )}
-              </div>
+        {/* Contact */}
+        {(business.phone || business.email || business.website || primaryLocation?.address) && (
+          <div className="mt-12">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Contact</h2>
+            <div className="grid sm:grid-cols-2 gap-4 text-sm">
+              {business.phone && (
+                <div className="flex items-center gap-3 text-gray-600 bg-white rounded-xl border border-gray-200 p-4">
+                  <PhoneIcon className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  <span>{business.phone}</span>
+                </div>
+              )}
+              {business.email && (
+                <div className="flex items-center gap-3 text-gray-600 bg-white rounded-xl border border-gray-200 p-4">
+                  <span className="w-5 h-5 text-gray-400 text-center flex-shrink-0">@</span>
+                  <span className="truncate">{business.email}</span>
+                </div>
+              )}
+              {business.website && (
+                <a
+                  href={business.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 text-[#0a1628] bg-white rounded-xl border border-gray-200 p-4 hover:border-[#0a1628]/30 transition-colors"
+                >
+                  <GlobeAltIcon className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                  <span className="truncate">{business.website}</span>
+                </a>
+              )}
+              {primaryLocation?.address && (
+                <div className="flex items-start gap-3 text-gray-600 bg-white rounded-xl border border-gray-200 p-4">
+                  <MapPinIcon className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                  <span>
+                    {primaryLocation.address}
+                    {primaryLocation.city && (
+                      <>
+                        <br />
+                        {primaryLocation.city}
+                        {primaryLocation.country_code && `, ${primaryLocation.country_code}`}
+                      </>
+                    )}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -236,7 +241,9 @@ export default function PublicBusinessPage() {
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 mb-6">Services</h2>
           {business.services.length === 0 ? (
-            <p className="text-gray-500">No services listed yet.</p>
+            <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
+              <p className="text-gray-500">No services listed yet.</p>
+            </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {business.services.map((s) => (
@@ -247,7 +254,7 @@ export default function PublicBusinessPage() {
                 >
                   <div className="flex items-start gap-3 mb-3">
                     <span
-                      className="w-3 h-3 rounded-full flex-shrink-0 mt-1"
+                      className="w-3 h-3 rounded-full flex-shrink-0 mt-1.5"
                       style={{ backgroundColor: s.color }}
                     />
                     <h3 className="font-semibold text-gray-900 group-hover:text-[#0a1628] transition-colors">
@@ -317,7 +324,7 @@ export default function PublicBusinessPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-50 border-t border-gray-100 py-8">
+      <footer className="bg-white border-t border-gray-100 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-500">
           Powered by{' '}
           <Link href="/" className="font-medium text-[#0a1628] hover:underline">

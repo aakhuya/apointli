@@ -72,6 +72,7 @@ export default function PublicBookingPage() {
   const [timezone, setTimezone] = useState('UTC')
 
   const [step, setStep] = useState<Step>(1)
+  const [entryStep, setEntryStep] = useState<Step>(1)
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingSlots, setIsLoadingSlots] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -105,6 +106,7 @@ export default function PublicBookingPage() {
           if (found) {
             setSel((prev) => ({ ...prev, service: found }))
             setStep(2)
+            setEntryStep(2)
           }
         }
       })
@@ -265,14 +267,19 @@ export default function PublicBookingPage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-30">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <Link
-            href={`/b/${business.slug}`}
+          <button
+            onClick={() => {
+              if (step > 1) setStep((s) => (s - 1) as Step)
+              else router.push(`/b/${business.slug}`)
+            }}
             className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900"
           >
             <ArrowLeftIcon className="w-4 h-4" />
-            <span className="hidden sm:inline">{business.name}</span>
+            <span className="hidden sm:inline">
+              {step > 1 ? 'Back' : business.name}
+            </span>
             <span className="sm:hidden">Back</span>
-          </Link>
+          </button>
           <ApointliLogo size="sm" />
         </div>
       </header>
@@ -631,7 +638,7 @@ export default function PublicBookingPage() {
       {/* Bottom CTA bar */}
       <div className="sticky bottom-0 bg-white border-t border-gray-200 z-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          {step > 1 ? (
+          {step > entryStep ? (
             <button
               onClick={() => setStep((s) => (s - 1) as Step)}
               className="px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl"
