@@ -275,10 +275,7 @@ export default function PublicBookingPage() {
             className="inline-flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900"
           >
             <ArrowLeftIcon className="w-4 h-4" />
-            <span className="hidden sm:inline">
-              {step > 1 ? 'Back' : business.name}
-            </span>
-            <span className="sm:hidden">Back</span>
+            <span>Back</span>
           </button>
           <ApointliLogo size="sm" />
         </div>
@@ -638,21 +635,12 @@ export default function PublicBookingPage() {
       {/* Bottom CTA bar */}
       <div className="sticky bottom-0 bg-white border-t border-gray-200 z-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3">
-          {step > entryStep ? (
-            <button
-              onClick={() => setStep((s) => (s - 1) as Step)}
-              className="px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl"
-            >
-              Back
-            </button>
-          ) : (
-            <Link
-              href={`/b/${business.slug}`}
-              className="px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl"
-            >
-              Cancel
-            </Link>
-          )}
+          <Link
+            href={`/b/${business.slug}`}
+            className="px-5 py-3 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+          >
+            Cancel
+          </Link>
 
           {step < 4 ? (
             <button
