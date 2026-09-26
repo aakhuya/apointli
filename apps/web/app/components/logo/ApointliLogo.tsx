@@ -1,54 +1,65 @@
-import localFont from 'next/font/local'
+'use client'
 
-const jakarta = localFont({
-  src: [
-    {
-      path: '../../fonts/PlusJakartaSans-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: '../../fonts/PlusJakartaSans-ExtraBold.woff2',
-      weight: '800',
-      style: 'normal',
-    },
-  ],
-  display: 'swap',
-  fallback: ['system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
-})
+import React from 'react'
 
 interface ApointliLogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl'
-  variant?: 'dark' | 'light'
+  variant?: 'light' | 'dark' | 'auto'
   showDot?: boolean
   className?: string
 }
 
 const sizeMap = {
-  sm: 'text-2xl',
-  md: 'text-3xl',
-  lg: 'text-4xl',
-  xl: 'text-6xl',
+  sm: 'text-lg',
+  md: 'text-xl',
+  lg: 'text-2xl',
+  xl: 'text-5xl',
 }
 
+/**
+ * Apointli wordmark logo.
+ *
+ * variant="auto" uses CSS classes that respect the current theme
+ * (text-[#0a1628] in light mode, text-white in dark mode) — this is
+ * the default and recommended value.
+ */
 export function ApointliLogo({
   size = 'md',
-  variant = 'dark',
+  variant = 'auto',
   showDot = true,
   className = '',
 }: ApointliLogoProps) {
-  const colorClass = variant === 'light' ? 'text-white' : 'text-[#0a1628]'
-  const dotColor = variant === 'light' ? 'bg-blue-300' : 'bg-[#2a44e8]'
+  let colorClass: string
+  let dotColor: string
+
+  if (variant === 'light') {
+    colorClass = 'text-white'
+    dotColor = 'bg-blue-300'
+  } else if (variant === 'dark') {
+    colorClass = 'text-[#0a1628]'
+    dotColor = 'bg-[#2a44e8]'
+  } else {
+    // auto — respects theme
+    colorClass = 'text-[#0a1628] dark:text-white'
+    dotColor = 'bg-[#2a44e8] dark:bg-blue-400'
+  }
 
   return (
     <span
-      className={`inline-flex items-baseline ${jakarta.className} ${sizeMap[size]} font-extrabold tracking-[-0.04em] ${colorClass} ${className}`}
+      className={`inline-flex items-baseline ${sizeMap[size]} ${colorClass} ${className}`}
       aria-label="apointli"
+      style={{
+        fontFamily:
+          'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontWeight: 800,
+        letterSpacing: '-0.045em',
+        lineHeight: 1,
+      }}
     >
       apointli
       {showDot && (
         <span
-          className={`inline-block w-[0.18em] h-[0.18em] ml-[0.08em] rounded-full ${dotColor}`}
+          className={`inline-block w-[0.16em] h-[0.16em] ml-[0.06em] rounded-full ${dotColor}`}
           aria-hidden="true"
         />
       )}
@@ -56,6 +67,17 @@ export function ApointliLogo({
   )
 }
 
-export function ApointliMark({ size = 'md', variant = 'dark', className = '' }: Omit<ApointliLogoProps, 'showDot'>) {
-  return <ApointliLogo size={size} variant={variant} showDot={false} className={className} />
+export function ApointliMark({
+  size = 'md',
+  variant = 'auto',
+  className = '',
+}: Omit<ApointliLogoProps, 'showDot'>) {
+  return (
+    <ApointliLogo
+      size={size}
+      variant={variant}
+      showDot={false}
+      className={className}
+    />
+  )
 }

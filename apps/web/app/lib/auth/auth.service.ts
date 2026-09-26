@@ -609,3 +609,27 @@ export const analyticsApi = {
     return res.data
   },
 }
+
+// ─── Notifications ───
+export interface NotificationItem {
+  id: string
+  type: string
+  title: string
+  body: string | null
+  created_at: string
+  link: string | null
+}
+
+export interface NotificationsResponse {
+  items: NotificationItem[]
+  unread_count: number
+}
+
+export const notificationApi = {
+  async list(orgId: string): Promise<NotificationsResponse> {
+    const res = await apiClient.get<NotificationsResponse>(
+      `/organizations/${orgId}/notifications`,
+    )
+    return res.data
+  },
+}

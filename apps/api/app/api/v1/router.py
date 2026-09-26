@@ -8,6 +8,7 @@ from app.api.v1.endpoints import (
     health,
     locales,
     locations,
+    notifications,
     organizations,
     public,
     schedules,
@@ -46,6 +47,11 @@ api_router.include_router(
     analytics.router,
     prefix="/organizations/{org_id}/analytics",
     tags=["analytics"],
+)
+api_router.include_router(
+    notifications.router,
+    prefix="/organizations/{org_id}/notifications",
+    tags=["notifications"],
 )
 api_router.include_router(
     services.router,
