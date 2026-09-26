@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
+    analytics,
     appointments,
     auth,
     availability,
@@ -40,6 +41,11 @@ api_router.include_router(
     appointments.router,
     prefix="/organizations/{org_id}/appointments",
     tags=["appointments"],
+)
+api_router.include_router(
+    analytics.router,
+    prefix="/organizations/{org_id}/analytics",
+    tags=["analytics"],
 )
 api_router.include_router(
     services.router,

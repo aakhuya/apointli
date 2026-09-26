@@ -551,3 +551,61 @@ export const availabilityApi = {
     return res.data
   },
 }
+
+// ─── Analytics ───
+export interface AnalyticsOverview {
+  total_appointments: number
+  revenue: number
+  currency: string
+  completed: number
+  cancelled: number
+  no_show: number
+  completion_rate: number
+  cancellation_rate: number
+  no_show_rate: number
+}
+
+export interface DailyTrendRow {
+  date: string
+  bookings: number
+  revenue: number
+}
+
+export interface ServiceBreakdownRow {
+  name: string
+  bookings: number
+  revenue: number
+}
+
+export interface StaffBreakdownRow {
+  staff_id: string
+  name: string
+  bookings: number
+  revenue: number
+}
+
+export interface HourRow {
+  hour: number
+  count: number
+}
+
+export interface AnalyticsResponse {
+  overview: AnalyticsOverview
+  daily_trend: DailyTrendRow[]
+  services: ServiceBreakdownRow[]
+  staff: StaffBreakdownRow[]
+  hourly: HourRow[]
+}
+
+export const analyticsApi = {
+  async get(
+    orgId: string,
+    params?: { start_date?: string; end_date?: string },
+  ): Promise<AnalyticsResponse> {
+    const res = await apiClient.get<AnalyticsResponse>(
+      `/organizations/${orgId}/analytics`,
+      { params },
+    )
+    return res.data
+  },
+}
