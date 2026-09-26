@@ -126,7 +126,7 @@ export default function CalendarPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Welcome to apointli
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-gray-600 dark:text-ink-400">
           Create a workspace first.
         </p>
         <Link
@@ -141,23 +141,23 @@ export default function CalendarPage() {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
+      <div className="flex-shrink-0 border-b border-gray-200 dark:border-ink-800 bg-white dark:bg-ink-950 px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate(-1)}
-            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800"
           >
             <ChevronLeftIcon className="w-5 h-5 text-gray-500" />
           </button>
           <button
             onClick={() => setAnchor(new Date())}
-            className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+            className="px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-ink-300 hover:bg-gray-100 dark:hover:bg-ink-800 rounded-lg"
           >
             Today
           </button>
           <button
             onClick={() => navigate(1)}
-            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800"
           >
             <ChevronRightIcon className="w-5 h-5 text-gray-500" />
           </button>
@@ -170,7 +170,7 @@ export default function CalendarPage() {
           <select
             value={staffFilter}
             onChange={(e) => setStaffFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+            className="px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white text-sm"
           >
             <option value="">All staff</option>
             {staff.map((s) => (
@@ -180,15 +180,15 @@ export default function CalendarPage() {
             ))}
           </select>
 
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 flex">
+          <div className="bg-gray-100 dark:bg-ink-800 rounded-lg p-0.5 flex">
             {(['day', 'week', 'month'] as ViewMode[]).map((v) => (
               <button
                 key={v}
                 onClick={() => setView(v)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md capitalize transition-colors ${
                   view === v
-                    ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-500 dark:text-gray-400'
+                    ? 'bg-white dark:bg-ink-900 text-gray-900 dark:text-white shadow-sm'
+                    : 'text-gray-500 dark:text-ink-400'
                 }`}
               >
                 {v}
@@ -211,7 +211,7 @@ export default function CalendarPage() {
 
       <div className="flex-1 overflow-hidden">
         {isLoading ? (
-          <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-gray-400">
+          <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-ink-400">
             <Loader className="w-5 h-5" /> Loading calendar...
           </div>
         ) : view === 'day' ? (
@@ -270,10 +270,10 @@ function DayView({
         {HOURS.map((h) => (
           <div
             key={h}
-            className="absolute left-0 right-0 border-t border-gray-100 dark:border-gray-800"
+            className="absolute left-0 right-0 border-t border-gray-100 dark:border-ink-800"
             style={{ top: `${h * HOUR_HEIGHT}px`, height: `${HOUR_HEIGHT}px` }}
           >
-            <span className="absolute -top-2 left-2 sm:left-4 text-[10px] font-medium text-gray-400 dark:text-gray-500 bg-white dark:bg-gray-950 px-1">
+            <span className="absolute -top-2 left-2 sm:left-4 text-[10px] font-medium text-gray-400 dark:text-ink-500 bg-white dark:bg-ink-950 px-1">
               {String(h).padStart(2, '0')}:00
             </span>
           </div>
@@ -313,7 +313,7 @@ function WeekView({
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+      <div className="flex-shrink-0 border-b border-gray-200 dark:border-ink-800 bg-white dark:bg-ink-950">
         <div className="flex">
           <div className="w-16 sm:w-20 flex-shrink-0" />
           {days.map((d) => {
@@ -321,11 +321,11 @@ function WeekView({
             return (
               <div
                 key={formatIsoDate(d)}
-                className={`flex-1 min-w-0 px-2 py-2 text-center border-l border-gray-100 dark:border-gray-800 ${
+                className={`flex-1 min-w-0 px-2 py-2 text-center border-l border-gray-100 dark:border-ink-800 ${
                   today ? 'bg-blue-50/50 dark:bg-blue-950/20' : ''
                 }`}
               >
-                <p className="text-[10px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                <p className="text-[10px] font-medium uppercase tracking-wide text-gray-500 dark:text-ink-400">
                   {d.toLocaleDateString([], { weekday: 'short' })}
                 </p>
                 <p
@@ -349,10 +349,10 @@ function WeekView({
             {HOURS.map((h) => (
               <div
                 key={h}
-                className="border-t border-gray-100 dark:border-gray-800"
+                className="border-t border-gray-100 dark:border-ink-800"
                 style={{ height: `${HOUR_HEIGHT}px` }}
               >
-                <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500 pl-2 block -mt-2">
+                <span className="text-[10px] font-medium text-gray-400 dark:text-ink-500 pl-2 block -mt-2">
                   {String(h).padStart(2, '0')}:00
                 </span>
               </div>
@@ -366,14 +366,14 @@ function WeekView({
             return (
               <div
                 key={formatIsoDate(d)}
-                className={`flex-1 min-w-0 relative border-l border-gray-100 dark:border-gray-800 ${
+                className={`flex-1 min-w-0 relative border-l border-gray-100 dark:border-ink-800 ${
                   isToday(d) ? 'bg-blue-50/30 dark:bg-blue-950/10' : ''
                 }`}
               >
                 {HOURS.map((h) => (
                   <div
                     key={h}
-                    className="border-t border-gray-100 dark:border-gray-800"
+                    className="border-t border-gray-100 dark:border-ink-800"
                     style={{ height: `${HOUR_HEIGHT}px` }}
                   />
                 ))}
@@ -423,7 +423,7 @@ function MonthView({
         {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
           <div
             key={d}
-            className="text-center text-[10px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 py-1"
+            className="text-center text-[10px] font-medium uppercase tracking-wide text-gray-500 dark:text-ink-400 py-1"
           >
             {d}
           </div>
@@ -445,8 +445,8 @@ function MonthView({
                 today
                   ? 'border-[#0a1628] dark:border-blue-500 bg-blue-50/30 dark:bg-blue-950/10'
                   : inMonth
-                    ? 'border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900'
-                    : 'border-gray-100 dark:border-gray-900 bg-gray-50/50 dark:bg-gray-950/50'
+                    ? 'border-gray-200 dark:border-ink-800 bg-white dark:bg-ink-900'
+                    : 'border-gray-100 dark:border-gray-900 bg-gray-50/50 dark:bg-ink-950/50'
               }`}
             >
               <div className="flex items-center justify-between mb-1">
@@ -462,7 +462,7 @@ function MonthView({
                   {d.getDate()}
                 </span>
                 {dayAppts.length > 0 && (
-                  <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400">
+                  <span className="text-[10px] font-medium text-gray-500 dark:text-ink-400">
                     {dayAppts.length}
                   </span>
                 )}
@@ -472,7 +472,7 @@ function MonthView({
                   <button
                     key={a.id}
                     onClick={() => onSelect(a)}
-                    className="w-full text-left text-[10px] font-medium truncate px-1.5 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+                    className="w-full text-left text-[10px] font-medium truncate px-1.5 py-0.5 rounded hover:bg-gray-100 dark:hover:bg-ink-800 text-gray-700 dark:text-ink-300"
                   >
                     <span className="tabular-nums opacity-70">
                       {new Date(a.start_time).getHours()}:
@@ -482,7 +482,7 @@ function MonthView({
                   </button>
                 ))}
                 {dayAppts.length > 3 && (
-                  <p className="text-[10px] text-gray-400 dark:text-gray-500 px-1.5">
+                  <p className="text-[10px] text-gray-400 dark:text-ink-500 px-1.5">
                     +{dayAppts.length - 3} more
                   </p>
                 )}

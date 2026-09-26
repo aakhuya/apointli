@@ -161,7 +161,7 @@ export default function AppointmentsPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Welcome to apointli
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-gray-600 dark:text-ink-400">
           Create a workspace first.
         </p>
         <Link
@@ -182,7 +182,7 @@ export default function AppointmentsPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Appointments
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             {appointments.length} appointment
             {appointments.length === 1 ? '' : 's'} this week
           </p>
@@ -191,7 +191,7 @@ export default function AppointmentsPage() {
           <select
             value={staffFilter}
             onChange={(e) => setStaffFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+            className="px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white text-sm"
           >
             <option value="">All staff</option>
             {staff.map((s) => (
@@ -213,11 +213,11 @@ export default function AppointmentsPage() {
       </div>
 
       {/* Week navigation */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 mb-6 flex items-center justify-between">
+      <div className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-4 mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setWeekStart(addDays(weekStart, -7))}
-            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800"
           >
             <ChevronLeftIcon className="w-5 h-5 text-gray-500" />
           </button>
@@ -228,7 +228,7 @@ export default function AppointmentsPage() {
           </div>
           <button
             onClick={() => setWeekStart(addDays(weekStart, 7))}
-            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800"
           >
             <ChevronRightIcon className="w-5 h-5 text-gray-500" />
           </button>
@@ -248,18 +248,18 @@ export default function AppointmentsPage() {
       )}
 
       {isLoading ? (
-        <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-3 text-gray-500 dark:text-ink-400">
           <Loader className="w-5 h-5" /> Loading appointments...
         </div>
       ) : appointments.length === 0 ? (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
-          <div className="w-12 h-12 mx-auto rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+        <div className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-12 text-center">
+          <div className="w-12 h-12 mx-auto rounded-full bg-gray-100 dark:bg-ink-800 flex items-center justify-center mb-3">
             <CalendarDaysIcon className="w-6 h-6 text-gray-400" />
           </div>
           <h3 className="font-semibold text-gray-900 dark:text-white">
             No appointments this week
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             Click <strong>New booking</strong> to create your first.
           </p>
         </div>
@@ -273,17 +273,17 @@ export default function AppointmentsPage() {
             return (
               <div
                 key={key}
-                className={`bg-white dark:bg-gray-900 border rounded-xl overflow-hidden ${
+                className={`bg-white dark:bg-ink-900 border rounded-xl overflow-hidden ${
                   isToday
                     ? 'border-[#0a1628] dark:border-blue-500 ring-1 ring-[#0a1628]/10 dark:ring-blue-500/20'
-                    : 'border-gray-200 dark:border-gray-800'
+                    : 'border-gray-200 dark:border-ink-800'
                 }`}
               >
                 <div
                   className={`px-3 py-2 border-b ${
                     isToday
                       ? 'bg-[#0a1628] dark:bg-blue-600 text-white'
-                      : 'border-gray-100 dark:border-gray-800'
+                      : 'border-gray-100 dark:border-ink-800'
                   }`}
                 >
                   <p className="text-[10px] font-medium uppercase tracking-wide opacity-80">
@@ -300,17 +300,17 @@ export default function AppointmentsPage() {
 
                 <div className="p-2 space-y-2 min-h-[120px]">
                   {dayAppts.length === 0 ? (
-                    <p className="text-[10px] text-gray-400 dark:text-gray-500 text-center pt-4">
+                    <p className="text-[10px] text-gray-400 dark:text-ink-500 text-center pt-4">
                       —
                     </p>
                   ) : (
                     dayAppts.map((a) => (
                       <div
                         key={a.id}
-                        className="bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg p-2 transition-colors group"
+                        className="bg-gray-50 dark:bg-ink-800/50 hover:bg-gray-100 dark:hover:bg-ink-800 rounded-lg p-2 transition-colors group"
                       >
                         <div className="flex items-center justify-between mb-1">
-                          <span className="text-[10px] font-medium text-gray-500 dark:text-gray-400">
+                          <span className="text-[10px] font-medium text-gray-500 dark:text-ink-400">
                             {formatTime(a.start_time)}
                           </span>
                           <Badge variant={STATUS_VARIANTS[a.status] || 'neutral'}>
@@ -322,10 +322,10 @@ export default function AppointmentsPage() {
                         <p className="text-xs font-medium text-gray-900 dark:text-white truncate">
                           {a.customer?.name || 'Unknown'}
                         </p>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate">
+                        <p className="text-[10px] text-gray-500 dark:text-ink-400 truncate">
                           {a.service_name}
                         </p>
-                        <p className="text-[10px] text-gray-400 dark:text-gray-500 truncate">
+                        <p className="text-[10px] text-gray-400 dark:text-ink-500 truncate">
                           {a.staff_name}
                         </p>
                         {a.status !== 'CANCELLED' && a.status !== 'COMPLETED' && (

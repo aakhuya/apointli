@@ -23,7 +23,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-ink-950">
         <Loader className="w-8 h-8 text-[#0a1628] dark:text-blue-500" />
       </div>
     )
@@ -32,7 +32,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!isAuthenticated) return null
 
   return (
-    <div className="h-screen flex bg-gray-50 dark:bg-gray-950">
+    <div className="h-screen flex bg-gray-50 dark:bg-ink-950">
       {/* Desktop sidebar */}
       <Sidebar />
 

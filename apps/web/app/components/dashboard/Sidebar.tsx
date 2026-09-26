@@ -36,8 +36,8 @@ export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside className="hidden lg:flex lg:flex-col w-60 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800">
-      <div className="h-16 flex items-center px-5 border-b border-gray-100 dark:border-gray-800">
+    <aside className="hidden lg:flex lg:flex-col w-60 bg-white dark:bg-ink-950 border-r border-gray-200 dark:border-ink-800">
+      <div className="h-16 flex items-center px-5 border-b border-gray-100 dark:border-ink-800">
         <Link href="/app">
           <ApointliLogo size="md" />
         </Link>
@@ -56,7 +56,7 @@ export function Sidebar() {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
                   ? 'bg-[#0a1628] dark:bg-blue-600 text-white shadow-sm'
-                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  : 'text-gray-600 dark:text-ink-400 hover:bg-gray-100 dark:hover:bg-ink-800'
               }`}
             >
               <Icon className="w-[18px] h-[18px] flex-shrink-0" />

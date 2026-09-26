@@ -23,7 +23,7 @@ export function MobileNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 pb-[env(safe-area-inset-bottom)]">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-ink-950 border-t border-gray-200 dark:border-ink-800 pb-[env(safe-area-inset-bottom)]">
       <div className="grid grid-cols-5">
         {tabs.map((tab) => {
           const Icon = tab.icon
@@ -37,7 +37,7 @@ export function MobileNav() {
               className={`flex flex-col items-center justify-center gap-1 py-2.5 transition-colors ${
                 active
                   ? 'text-[#0a1628] dark:text-blue-400'
-                  : 'text-gray-400 dark:text-gray-500'
+                  : 'text-gray-400 dark:text-ink-500'
               }`}
             >
               <Icon className="w-5 h-5" strokeWidth={active ? 2.4 : 1.8} />

@@ -9,10 +9,10 @@ const STATUS_COLORS: Record<string, { bg: string; border: string; text: string; 
   CONFIRMED:   { bg: 'bg-emerald-50 dark:bg-emerald-950/40', border: 'border-emerald-300 dark:border-emerald-800', text: 'text-emerald-900 dark:text-emerald-100', dot: 'bg-emerald-500' },
   CHECKED_IN:  { bg: 'bg-blue-50 dark:bg-blue-950/40',     border: 'border-blue-300 dark:border-blue-800',     text: 'text-blue-900 dark:text-blue-100', dot: 'bg-blue-500' },
   IN_PROGRESS: { bg: 'bg-blue-50 dark:bg-blue-950/40',     border: 'border-blue-300 dark:border-blue-800',     text: 'text-blue-900 dark:text-blue-100', dot: 'bg-blue-500' },
-  COMPLETED:   { bg: 'bg-gray-50 dark:bg-gray-900/60',     border: 'border-gray-300 dark:border-gray-700',     text: 'text-gray-600 dark:text-gray-400', dot: 'bg-gray-400' },
+  COMPLETED:   { bg: 'bg-gray-50 dark:bg-ink-900/60',     border: 'border-gray-300 dark:border-ink-700',     text: 'text-gray-600 dark:text-ink-400', dot: 'bg-gray-400' },
   CANCELLED:   { bg: 'bg-rose-50 dark:bg-rose-950/40',     border: 'border-rose-300 dark:border-rose-800',     text: 'text-rose-900 dark:text-rose-100', dot: 'bg-rose-500' },
   NO_SHOW:     { bg: 'bg-rose-50 dark:bg-rose-950/40',     border: 'border-rose-300 dark:border-rose-800',     text: 'text-rose-900 dark:text-rose-100', dot: 'bg-rose-500' },
-  RESCHEDULED: { bg: 'bg-gray-50 dark:bg-gray-900/60',     border: 'border-gray-300 dark:border-gray-700',     text: 'text-gray-600 dark:text-gray-400', dot: 'bg-gray-400' },
+  RESCHEDULED: { bg: 'bg-gray-50 dark:bg-ink-900/60',     border: 'border-gray-300 dark:border-ink-700',     text: 'text-gray-600 dark:text-ink-400', dot: 'bg-gray-400' },
 }
 
 interface Props {

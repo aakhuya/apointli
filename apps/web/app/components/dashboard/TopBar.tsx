@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
   Bars3Icon,
@@ -23,7 +22,6 @@ export function TopBar({ onOpenMobileMenu }: Props) {
   const { user, logout } = useAuth()
   const { currentOrg } = useOrganization()
   const { resolvedTheme, toggle } = useTheme()
-  const router = useRouter()
   const [userOpen, setUserOpen] = useState(false)
 
   const fullName = [user?.first_name, user?.last_name].filter(Boolean).join(' ')
@@ -34,14 +32,14 @@ export function TopBar({ onOpenMobileMenu }: Props) {
     '?'
 
   return (
-    <header className="h-16 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 flex items-center justify-between px-3 sm:px-6 gap-3">
+    <header className="h-16 border-b border-gray-200 dark:border-ink-800 bg-white dark:bg-ink-950 flex items-center justify-between px-3 sm:px-6 gap-3">
       {/* Mobile menu button */}
       <button
         onClick={onOpenMobileMenu}
         aria-label="Open menu"
-        className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex-shrink-0"
+        className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800 transition-colors flex-shrink-0"
       >
-        <Bars3Icon className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+        <Bars3Icon className="w-5 h-5 text-gray-700 dark:text-ink-300" />
       </button>
 
       {/* Search - hidden on very small screens */}
@@ -51,9 +49,9 @@ export function TopBar({ onOpenMobileMenu }: Props) {
           <input
             type="text"
             placeholder="Search bookings, customers, or services..."
-            className="w-full pl-10 pr-12 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500"
+            className="w-full pl-10 pr-12 py-2 bg-gray-50 dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500"
           />
-          <kbd className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded">
+          <kbd className="hidden md:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-gray-400 bg-white dark:bg-ink-800 border border-gray-200 dark:border-ink-700 rounded">
             ⌘ K
           </kbd>
         </div>
@@ -64,7 +62,7 @@ export function TopBar({ onOpenMobileMenu }: Props) {
         <button
           onClick={toggle}
           aria-label="Toggle theme"
-          className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800 transition-colors"
         >
           {resolvedTheme === 'dark' ? (
             <SunIcon className="w-[18px] h-[18px] text-gray-400" />
@@ -74,8 +72,8 @@ export function TopBar({ onOpenMobileMenu }: Props) {
         </button>
 
         {/* Notifications */}
-        <button className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-          <BellIcon className="w-[18px] h-[18px] text-gray-500 dark:text-gray-400" />
+        <button className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800 transition-colors">
+          <BellIcon className="w-[18px] h-[18px] text-gray-500 dark:text-ink-400" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-gray-950" />
         </button>
 
@@ -83,7 +81,7 @@ export function TopBar({ onOpenMobileMenu }: Props) {
         <div className="relative">
           <button
             onClick={() => setUserOpen(!userOpen)}
-            className="flex items-center gap-2.5 sm:pl-2 pr-1 sm:pr-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="flex items-center gap-2.5 sm:pl-2 pr-1 sm:pr-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800 transition-colors"
           >
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0a1628] to-[#2a44e8] text-white flex items-center justify-center text-xs font-semibold flex-shrink-0">
               {initials}
@@ -92,7 +90,7 @@ export function TopBar({ onOpenMobileMenu }: Props) {
               <p className="text-xs font-semibold text-gray-900 dark:text-white leading-tight">
                 {displayName}
               </p>
-              <p className="text-[10px] text-gray-500 dark:text-gray-400 leading-tight">
+              <p className="text-[10px] text-gray-500 dark:text-ink-400 leading-tight">
                 {currentOrg?.role
                   ? currentOrg.role.charAt(0) + currentOrg.role.slice(1).toLowerCase()
                   : 'Owner'}
@@ -104,29 +102,20 @@ export function TopBar({ onOpenMobileMenu }: Props) {
           {userOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setUserOpen(false)} />
-              <div className="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 py-1 z-20">
-                <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-800">
+              <div className="absolute right-0 top-full mt-1 w-56 bg-white dark:bg-ink-900 rounded-xl shadow-lg border border-gray-200 dark:border-ink-800 py-1 z-20">
+                <div className="px-3 py-2 border-b border-gray-100 dark:border-ink-800">
                   <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                     {displayName}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  <p className="text-xs text-gray-500 dark:text-ink-400 truncate">
                     {user?.email}
                   </p>
                 </div>
-                <button
-                  onClick={() => {
-                    router.push('/app/settings')
-                    setUserOpen(false)
-                  }}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-900 dark:text-gray-100"
-                >
-                  Settings
-                </button>
-                <button
+<button
                   onClick={() => logout()}
-                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 text-rose-600 dark:text-rose-400"
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-ink-800 text-rose-600 dark:text-rose-400"
                 >
-                  Sign out
+                  Log out
                 </button>
               </div>
             </>

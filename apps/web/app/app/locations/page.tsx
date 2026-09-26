@@ -115,7 +115,7 @@ export default function LocationsPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Welcome to apointli
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-gray-600 dark:text-ink-400">
           Create a workspace first.
         </p>
         <Link
@@ -130,7 +130,7 @@ export default function LocationsPage() {
 
   if (orgLoading || isLoading) {
     return (
-      <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-gray-400">
+      <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-ink-400">
         <Loader className="w-5 h-5" /> Loading locations...
       </div>
     )
@@ -143,7 +143,7 @@ export default function LocationsPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Locations
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             Where you serve your customers
           </p>
         </div>
@@ -162,19 +162,19 @@ export default function LocationsPage() {
       )}
 
       {showCreate && (
-        <div className="mb-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+        <div className="mb-6 bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-5">
           <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
             New location
           </h2>
           <form onSubmit={onCreate} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                 Name
               </label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                 placeholder="Main Branch"
                 required
               />
@@ -182,7 +182,7 @@ export default function LocationsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Country code
                 </label>
                 <input
@@ -191,18 +191,18 @@ export default function LocationsPage() {
                     setForm({ ...form, country_code: e.target.value.toUpperCase() })
                   }
                   maxLength={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm uppercase"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm uppercase"
                   placeholder="KE"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Timezone
                 </label>
                 <input
                   value={form.timezone}
                   onChange={(e) => setForm({ ...form, timezone: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                   placeholder="Africa/Nairobi"
                 />
               </div>
@@ -210,7 +210,7 @@ export default function LocationsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Currency
                 </label>
                 <input
@@ -219,31 +219,31 @@ export default function LocationsPage() {
                     setForm({ ...form, currency: e.target.value.toUpperCase() })
                   }
                   maxLength={3}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm uppercase"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm uppercase"
                   placeholder="KES"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   City
                 </label>
                 <input
                   value={form.city}
                   onChange={(e) => setForm({ ...form, city: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                   placeholder="Nairobi"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                 Address
               </label>
               <input
                 value={form.address}
                 onChange={(e) => setForm({ ...form, address: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                 placeholder="123 Kenyatta Avenue"
               />
             </div>
@@ -263,7 +263,7 @@ export default function LocationsPage() {
                   setForm(emptyForm)
                   setShowCreate(false)
                 }}
-                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-ink-300 hover:bg-gray-100 dark:hover:bg-ink-800 rounded-lg"
               >
                 Cancel
               </button>
@@ -273,11 +273,11 @@ export default function LocationsPage() {
       )}
 
       {locations.length === 0 ? (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-12 text-center">
           <h3 className="font-semibold text-gray-900 dark:text-white">
             No locations yet
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             Add your first location to get started.
           </p>
         </div>
@@ -286,7 +286,7 @@ export default function LocationsPage() {
           {locations.map((loc) => (
             <div
               key={loc.id}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-start justify-between gap-3"
+              className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-4 flex items-start justify-between gap-3"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -300,11 +300,11 @@ export default function LocationsPage() {
                   )}
                 </div>
                 {(loc.address || loc.city) && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">
+                  <p className="text-sm text-gray-500 dark:text-ink-400 mt-1 truncate">
                     {[loc.address, loc.city].filter(Boolean).join(', ')}
                   </p>
                 )}
-                <div className="flex items-center gap-3 mt-1 text-xs text-gray-400 dark:text-gray-500">
+                <div className="flex items-center gap-3 mt-1 text-xs text-gray-400 dark:text-ink-500">
                   <span>{loc.timezone}</span>
                   <span>·</span>
                   <span>{loc.currency}</span>

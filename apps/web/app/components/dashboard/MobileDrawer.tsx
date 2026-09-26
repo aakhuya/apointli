@@ -67,18 +67,18 @@ export function MobileDrawer({ open, onClose }: Props) {
         onClick={onClose}
       />
       <aside
-        className={`lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transition-transform duration-250 ease-out ${
+        className={`lg:hidden fixed top-0 left-0 bottom-0 z-50 w-72 bg-white dark:bg-ink-950 border-r border-gray-200 dark:border-ink-800 transition-transform duration-250 ease-out ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="h-16 flex items-center justify-between px-5 border-b border-gray-100 dark:border-gray-800">
+        <div className="h-16 flex items-center justify-between px-5 border-b border-gray-100 dark:border-ink-800">
           <ApointliLogo size="md" />
           <button
             onClick={onClose}
             aria-label="Close menu"
-            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800"
           >
-            <XMarkIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <XMarkIcon className="w-5 h-5 text-gray-500 dark:text-ink-400" />
           </button>
         </div>
         <nav className="p-3 space-y-0.5 overflow-y-auto h-[calc(100vh-64px)]">
@@ -94,7 +94,7 @@ export function MobileDrawer({ open, onClose }: Props) {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   active
                     ? 'bg-[#0a1628] dark:bg-blue-600 text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                    : 'text-gray-600 dark:text-ink-400 hover:bg-gray-100 dark:hover:bg-ink-800'
                 }`}
               >
                 <Icon className="w-[18px] h-[18px] flex-shrink-0" />

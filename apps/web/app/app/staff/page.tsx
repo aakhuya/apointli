@@ -102,7 +102,7 @@ function StaffCard({
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+    <div className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl overflow-hidden">
       <div className="p-4 flex items-center gap-4">
         <div className="w-12 h-12 rounded-full bg-[#0a1628] dark:bg-blue-600 text-white flex items-center justify-center font-semibold flex-shrink-0">
           {getInitials(staff.first_name, staff.last_name, staff.email)}
@@ -113,16 +113,16 @@ function StaffCard({
               {getDisplayName(staff)}
             </h3>
             {!staff.accepts_bookings && (
-              <span className="text-[10px] font-medium uppercase tracking-wide px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded">
+              <span className="text-[10px] font-medium uppercase tracking-wide px-2 py-0.5 bg-gray-100 dark:bg-ink-800 text-gray-600 dark:text-ink-400 rounded">
                 Not booking
               </span>
             )}
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
+          <p className="text-sm text-gray-500 dark:text-ink-400 truncate">
             {staff.title || staff.email}
           </p>
           {staff.location_name && (
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+            <p className="text-xs text-gray-400 dark:text-ink-500 mt-0.5">
               📍 {staff.location_name}
             </p>
           )}
@@ -155,7 +155,7 @@ function StaffCard({
       </div>
 
       {open && (
-        <div className="border-t border-gray-100 dark:border-gray-800 p-4 bg-gray-50 dark:bg-gray-900/50">
+        <div className="border-t border-gray-100 dark:border-ink-800 p-4 bg-gray-50 dark:bg-ink-900/50">
           {error && (
             <div className="mb-3 p-2 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded text-xs text-rose-600 dark:text-rose-400">
               {error}
@@ -163,18 +163,18 @@ function StaffCard({
           )}
 
           {loading ? (
-            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-ink-400">
               <Loader className="w-4 h-4" /> Loading...
             </div>
           ) : (
             <div className="space-y-4">
               {/* Assigned */}
               <div>
-                <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">
+                <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-ink-400 mb-2">
                   Assigned services ({assigned.length})
                 </h4>
                 {assigned.length === 0 ? (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-gray-500 dark:text-ink-400">
                     Not assigned to any services yet.
                   </p>
                 ) : (
@@ -182,7 +182,7 @@ function StaffCard({
                     {assigned.map((a) => (
                       <span
                         key={a.service_id}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-sm"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-ink-800 border border-gray-200 dark:border-ink-700 rounded-lg text-sm"
                       >
                         <span
                           className="w-2 h-2 rounded-full flex-shrink-0"
@@ -211,7 +211,7 @@ function StaffCard({
               {/* Available */}
               {available.length > 0 && (
                 <div>
-                  <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-2">
+                  <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-ink-400 mb-2">
                     Available to assign
                   </h4>
                   <div className="flex flex-wrap gap-2">
@@ -220,7 +220,7 @@ function StaffCard({
                         key={s.id}
                         onClick={() => onAssign(s.id)}
                         disabled={busyId === s.id}
-                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-gray-800 border border-dashed border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:border-[#0a1628] dark:hover:border-blue-500 hover:text-[#0a1628] dark:hover:text-blue-400 disabled:opacity-50 transition-colors"
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-ink-800 border border-dashed border-gray-300 dark:border-ink-700 rounded-lg text-sm text-gray-700 dark:text-ink-300 hover:border-[#0a1628] dark:hover:border-blue-500 hover:text-[#0a1628] dark:hover:text-blue-400 disabled:opacity-50 transition-colors"
                       >
                         <span
                           className="w-2 h-2 rounded-full flex-shrink-0"
@@ -319,7 +319,7 @@ export default function StaffPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Welcome to apointli
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-gray-600 dark:text-ink-400">
           Create a workspace first.
         </p>
         <Link
@@ -334,7 +334,7 @@ export default function StaffPage() {
 
   if (orgLoading || isLoading) {
     return (
-      <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-gray-400">
+      <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-ink-400">
         <Loader className="w-5 h-5" /> Loading staff...
       </div>
     )
@@ -347,7 +347,7 @@ export default function StaffPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Staff
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             Your team and their services
           </p>
         </div>
@@ -366,23 +366,23 @@ export default function StaffPage() {
       )}
 
       {showCreate && (
-        <div className="mb-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+        <div className="mb-6 bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-5">
           <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
             Add staff member
           </h2>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">
+          <p className="text-xs text-gray-500 dark:text-ink-400 mb-4">
             The user must already have an apointli account.
           </p>
           <form onSubmit={handleSubmit(onCreate)} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Email
                 </label>
                 <input
                   {...register('email')}
                   type="email"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                   placeholder="stylist@example.com"
                 />
                 {errors.email && (
@@ -390,37 +390,37 @@ export default function StaffPage() {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Title
                 </label>
                 <input
                   {...register('title')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                   placeholder="Senior Stylist"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                 Bio
               </label>
               <textarea
                 {...register('bio')}
                 rows={2}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                 placeholder="Short bio (optional)"
               />
             </div>
 
             {locations.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Location
                 </label>
                 <select
                   {...register('location_id')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                 >
                   <option value="">— None —</option>
                   {locations.map((l) => (
@@ -447,7 +447,7 @@ export default function StaffPage() {
                   reset()
                   setShowCreate(false)
                 }}
-                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-ink-300 hover:bg-gray-100 dark:hover:bg-ink-800 rounded-lg"
               >
                 Cancel
               </button>
@@ -457,11 +457,11 @@ export default function StaffPage() {
       )}
 
       {staff.length === 0 ? (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
+        <div className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-12 text-center">
           <h3 className="font-semibold text-gray-900 dark:text-white">
             No staff yet
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             Add team members and assign them to services.
           </p>
         </div>

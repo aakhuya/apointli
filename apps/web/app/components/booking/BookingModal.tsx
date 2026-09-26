@@ -166,27 +166,27 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
       />
 
       {/* Drawer */}
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[480px] bg-white dark:bg-gray-950 shadow-2xl flex flex-col">
+      <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[480px] bg-white dark:bg-ink-950 shadow-2xl flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
+        <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200 dark:border-ink-800 flex-shrink-0">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
               New booking
             </h2>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-gray-500 dark:text-ink-400">
               Step {step} of 4
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800"
           >
             <XMarkIcon className="w-5 h-5 text-gray-500" />
           </button>
         </div>
 
         {/* Progress */}
-        <div className="h-1 bg-gray-100 dark:bg-gray-800 flex-shrink-0">
+        <div className="h-1 bg-gray-100 dark:bg-ink-800 flex-shrink-0">
           <div
             className="h-full bg-[#0a1628] dark:bg-blue-600 transition-all duration-300"
             style={{ width: `${(step / 4) * 100}%` }}
@@ -212,7 +212,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                   <Loader className="w-4 h-4" /> Loading services...
                 </div>
               ) : services.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-ink-400">
                   You don't have any services yet. Add one first.
                 </p>
               ) : (
@@ -223,8 +223,8 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                       onClick={() => setForm({ ...form, serviceId: s.id })}
                       className={`w-full text-left p-3 rounded-xl border-2 transition-all ${
                         form.serviceId === s.id
-                          ? 'border-[#0a1628] dark:border-blue-500 bg-gray-50 dark:bg-gray-900'
-                          : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                          ? 'border-[#0a1628] dark:border-blue-500 bg-gray-50 dark:bg-ink-900'
+                          : 'border-gray-200 dark:border-ink-800 hover:border-gray-300 dark:hover:border-gray-700'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -236,7 +236,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                           <p className="text-sm font-medium text-gray-900 dark:text-white">
                             {s.name}
                           </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                          <p className="text-xs text-gray-500 dark:text-ink-400">
                             {s.duration_minutes} min
                             {s.price != null && ` · ${s.currency} ${s.price.toFixed(2)}`}
                           </p>
@@ -256,7 +256,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                 Choose a staff member
               </h3>
               {staff.length === 0 ? (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-ink-400">
                   No staff members yet.
                 </p>
               ) : (
@@ -267,8 +267,8 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                       onClick={() => setForm({ ...form, staffId: s.id })}
                       className={`w-full text-left p-3 rounded-xl border-2 transition-all ${
                         form.staffId === s.id
-                          ? 'border-[#0a1628] dark:border-blue-500 bg-gray-50 dark:bg-gray-900'
-                          : 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                          ? 'border-[#0a1628] dark:border-blue-500 bg-gray-50 dark:bg-ink-900'
+                          : 'border-gray-200 dark:border-ink-800 hover:border-gray-300 dark:hover:border-gray-700'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -280,7 +280,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                             {s.first_name} {s.last_name}
                           </p>
                           {s.title && (
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                            <p className="text-xs text-gray-500 dark:text-ink-400">
                               {s.title}
                             </p>
                           )}
@@ -301,7 +301,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
               </h3>
 
               <div className="mb-4">
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-xs font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Date
                 </label>
                 <input
@@ -309,7 +309,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                   value={form.date}
                   min={todayIso()}
                   onChange={(e) => setForm({ ...form, date: e.target.value, slotStart: '' })}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white text-sm"
                 />
               </div>
 
@@ -318,12 +318,12 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                   <Loader className="w-4 h-4" /> Loading slots...
                 </div>
               ) : slots.length === 0 ? (
-                <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 text-center text-sm text-gray-500 dark:text-gray-400">
+                <div className="bg-gray-50 dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-lg p-4 text-center text-sm text-gray-500 dark:text-ink-400">
                   No available slots for this day. Try another date.
                 </div>
               ) : (
                 <>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                  <p className="text-xs text-gray-500 dark:text-ink-400 mb-2">
                     {slots.length} slots available — {timezone}
                   </p>
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
@@ -334,7 +334,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                         className={`py-2 px-3 rounded-lg border-2 text-xs font-medium transition-all ${
                           form.slotStart === slot.start
                             ? 'border-[#0a1628] dark:border-blue-500 bg-[#0a1628] dark:bg-blue-600 text-white'
-                            : 'border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-600'
+                            : 'border-gray-200 dark:border-ink-800 text-gray-700 dark:text-ink-300 hover:border-gray-400 dark:hover:border-gray-600'
                         }`}
                       >
                         {slot.local_start}
@@ -354,7 +354,7 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
               </h3>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-xs font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Full name
                 </label>
                 <input
@@ -362,12 +362,12 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                   value={form.customerName}
                   onChange={(e) => setForm({ ...form, customerName: e.target.value })}
                   placeholder="Alice Kamau"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-xs font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Email (optional)
                 </label>
                 <input
@@ -375,12 +375,12 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                   value={form.customerEmail}
                   onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
                   placeholder="alice@example.com"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-xs font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Phone (optional)
                 </label>
                 <input
@@ -388,44 +388,44 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
                   value={form.customerPhone}
                   onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
                   placeholder="+254 700 000 000"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-xs font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Notes (optional)
                 </label>
                 <textarea
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white text-sm"
                 />
               </div>
 
               {/* Summary */}
-              <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-2 text-sm">
+              <div className="bg-gray-50 dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-4 space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Service</span>
+                  <span className="text-gray-500 dark:text-ink-400">Service</span>
                   <span className="text-gray-900 dark:text-white font-medium">
                     {selectedService?.name}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Staff</span>
+                  <span className="text-gray-500 dark:text-ink-400">Staff</span>
                   <span className="text-gray-900 dark:text-white font-medium">
                     {selectedStaff?.first_name} {selectedStaff?.last_name}
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Duration</span>
+                  <span className="text-gray-500 dark:text-ink-400">Duration</span>
                   <span className="text-gray-900 dark:text-white font-medium">
                     {selectedService?.duration_minutes} min
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-400">Price</span>
+                  <span className="text-gray-500 dark:text-ink-400">Price</span>
                   <span className="text-gray-900 dark:text-white font-medium">
                     {selectedService?.price != null
                       ? localeService.formatMoney(
@@ -441,11 +441,11 @@ export function BookingModal({ open, onClose, orgId, onCreated }: Props) {
         </div>
 
         {/* Footer */}
-        <div className="border-t border-gray-200 dark:border-gray-800 p-4 flex items-center justify-between gap-3 flex-shrink-0">
+        <div className="border-t border-gray-200 dark:border-ink-800 p-4 flex items-center justify-between gap-3 flex-shrink-0">
           <button
             onClick={() => setStep((s) => (s > 1 ? ((s - 1) as 1 | 2 | 3 | 4) : s))}
             disabled={step === 1}
-            className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg disabled:opacity-40"
+            className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-ink-300 hover:bg-gray-100 dark:hover:bg-ink-800 rounded-lg disabled:opacity-40"
           >
             Back
           </button>

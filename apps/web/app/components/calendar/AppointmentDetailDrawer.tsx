@@ -70,8 +70,8 @@ export function AppointmentDetailDrawer({ appointment, orgId, onClose, onUpdated
   return (
     <>
       <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm" onClick={onClose} />
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[420px] bg-white dark:bg-gray-950 shadow-2xl flex flex-col">
-        <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
+      <div className="fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[420px] bg-white dark:bg-ink-950 shadow-2xl flex flex-col">
+        <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200 dark:border-ink-800 flex-shrink-0">
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
               Appointment
@@ -82,7 +82,7 @@ export function AppointmentDetailDrawer({ appointment, orgId, onClose, onUpdated
           </div>
           <button
             onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-ink-800"
           >
             <XMarkIcon className="w-5 h-5 text-gray-500" />
           </button>
@@ -110,7 +110,7 @@ export function AppointmentDetailDrawer({ appointment, orgId, onClose, onUpdated
                 {appointment.customer?.name || 'Unknown'}
               </p>
               {appointment.customer?.email && (
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+                <p className="text-xs text-gray-500 dark:text-ink-400">
                   {appointment.customer.email}
                 </p>
               )}
@@ -147,10 +147,10 @@ export function AppointmentDetailDrawer({ appointment, orgId, onClose, onUpdated
           {/* Notes */}
           {appointment.notes && (
             <div>
-              <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
+              <p className="text-xs font-medium text-gray-500 dark:text-ink-400 uppercase tracking-wide mb-2">
                 Notes
               </p>
-              <p className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-900 rounded-lg p-3">
+              <p className="text-sm text-gray-700 dark:text-ink-300 bg-gray-50 dark:bg-ink-900 rounded-lg p-3">
                 {appointment.notes}
               </p>
             </div>
@@ -161,7 +161,7 @@ export function AppointmentDetailDrawer({ appointment, orgId, onClose, onUpdated
         {appointment.status !== 'CANCELLED' &&
           appointment.status !== 'COMPLETED' &&
           appointment.status !== 'NO_SHOW' && (
-            <div className="border-t border-gray-200 dark:border-gray-800 p-4 flex gap-2">
+            <div className="border-t border-gray-200 dark:border-ink-800 p-4 flex gap-2">
               <button
                 onClick={cancel}
                 disabled={busy}
@@ -189,7 +189,7 @@ function DetailRow({
     <div className="flex items-start gap-3">
       <Icon className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" />
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+        <p className="text-[10px] font-medium text-gray-500 dark:text-ink-400 uppercase tracking-wide">
           {label}
         </p>
         <p className="text-sm text-gray-900 dark:text-white truncate">{value}</p>

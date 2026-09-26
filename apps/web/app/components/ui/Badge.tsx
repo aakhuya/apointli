@@ -7,7 +7,7 @@ const variants: Record<BadgeVariant, string> = {
     'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800',
   info: 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800',
   neutral:
-    'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700',
+    'bg-gray-100 dark:bg-ink-800 text-gray-700 dark:text-ink-300 border-gray-200 dark:border-ink-700',
   danger:
     'bg-rose-50 dark:bg-rose-900/20 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-800',
 }

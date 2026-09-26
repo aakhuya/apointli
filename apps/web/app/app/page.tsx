@@ -1,164 +1,200 @@
 'use client'
 
 import Link from 'next/link'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ArrowRightIcon,
+  BanknotesIcon,
   CalendarDaysIcon,
+  CheckCircleIcon,
   ClockIcon,
-  CurrencyDollarIcon,
-  EllipsisVerticalIcon,
-  SparklesIcon,
-  UserPlusIcon,
 } from '@heroicons/react/24/outline'
 import {
-  LineChart,
   Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
 } from 'recharts'
 
+import { Loader } from '@/app/components/Loader'
 import { Badge } from '@/app/components/ui/Badge'
 import { Card, CardHeader } from '@/app/components/ui/Card'
 import { StatCard } from '@/app/components/ui/StatCard'
+import {
+  analyticsApi,
+  appointmentApi,
+  type AnalyticsResponse,
+  type Appointment,
+} from '@/app/lib/auth/auth.service'
 import { useAuth } from '@/app/providers/auth-provider'
 import { useOrganization } from '@/app/providers/organization-provider'
 
-// Demo data — will be replaced with real API calls later
-const appointments = [
-  { time: '09:00', name: 'Brian Mwangi', service: 'Haircut (30 min)', staff: 'Mike', status: 'Confirmed' },
-  { time: '10:30', name: 'Mary Wanjiku', service: 'Beard trim (15 min)', staff: 'Jane', status: 'Pending' },
-  { time: '12:00', name: 'Kevin Otieno', service: 'Full grooming (60 min)', staff: 'Mike', status: 'Completed' },
-  { time: '14:30', name: 'David Kimani', service: 'Haircut (30 min)', staff: 'Jane', status: 'Confirmed' },
-  { time: '16:00', name: 'Samuel Njoroge', service: 'Beard trim (15 min)', staff: 'Mike', status: 'Confirmed' },
-]
-
-const popularServices = [
-  { name: 'Haircut', bookings: 142, price: 500, color: '#2a44e8' },
-  { name: 'Beard trim', bookings: 98, price: 250, color: '#10b981' },
-  { name: 'Full grooming', bookings: 76, price: 1000, color: '#f59e0b' },
-  { name: 'Hair coloring', bookings: 45, price: 1500, color: '#ec4899' },
-]
-
-const chartData = [
-  { day: 'Sep 6', value: 6200 },
-  { day: 'Sep 7', value: 5800 },
-  { day: 'Sep 8', value: 7400 },
-  { day: 'Sep 9', value: 9100 },
-  { day: 'Sep 10', value: 8600 },
-  { day: 'Sep 11', value: 9200 },
-  { day: 'Sep 12', value: 14500 },
-]
-
-function getStatusVariant(status: string) {
-  if (status === 'Confirmed') return 'success'
-  if (status === 'Pending') return 'warning'
-  if (status === 'Completed') return 'info'
-  return 'neutral'
+function formatMoney(amount: number, currency: string) {
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount)
+  } catch {
+    return `${currency} ${amount.toFixed(0)}`
+  }
 }
 
-function getInitials(name: string) {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
+function formatTime(iso: string) {
+  return new Date(iso).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  })
+}
+
+function getStatusVariant(status: string) {
+  if (status === 'CONFIRMED') return 'success'
+  if (status === 'SCHEDULED') return 'warning'
+  if (status === 'COMPLETED') return 'info'
+  if (status === 'CANCELLED' || status === 'NO_SHOW') return 'danger'
+  return 'neutral'
 }
 
 export default function AppHome() {
   const { user } = useAuth()
-  const { currentOrg } = useOrganization()
+  const { currentOrg, isLoading: orgLoading } = useOrganization()
+  const [analytics, setAnalytics] = useState<AnalyticsResponse | null>(null)
+  const [todayAppts, setTodayAppts] = useState<Appointment[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  const load = useCallback(async () => {
+    if (!currentOrg) return
+    setIsLoading(true)
+    try {
+      const today = new Date()
+      const startOfDay = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+      )
+      const endOfDay = new Date(startOfDay)
+      endOfDay.setDate(endOfDay.getDate() + 1)
+
+      const [analyticsRes, appts] = await Promise.all([
+        analyticsApi.get(currentOrg.id, {
+          start_date: new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            1,
+          )
+            .toISOString()
+            .split('T')[0],
+          end_date: today.toISOString().split('T')[0],
+        }),
+        appointmentApi.list(currentOrg.id, {
+          from_date: startOfDay.toISOString(),
+          to_date: endOfDay.toISOString(),
+        }),
+      ])
+
+      setAnalytics(analyticsRes)
+      setTodayAppts(appts)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [currentOrg])
+
+  useEffect(() => {
+    if (!orgLoading && currentOrg) void load()
+    else if (!orgLoading) setIsLoading(false)
+  }, [orgLoading, currentOrg, load])
 
   const firstName = user?.first_name || 'there'
   const hour = new Date().getHours()
   const greeting =
     hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening'
+  const currency = analytics?.overview.currency || currentOrg?.currency || 'USD'
+
+  const trendData = useMemo(
+    () =>
+      (analytics?.daily_trend || []).slice(-14).map((d) => ({
+        label: new Date(d.date + 'T00:00:00').toLocaleDateString(undefined, {
+          month: 'short',
+          day: 'numeric',
+        }),
+        revenue: d.revenue,
+      })),
+    [analytics],
+  )
+
+  if (!orgLoading && !currentOrg) {
+    return (
+      <div className="p-6 sm:p-8 max-w-xl">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-ink-100">
+          Welcome, {firstName}!
+        </h1>
+        <p className="mt-2 text-gray-600 dark:text-ink-400">
+          Create a workspace to get started.
+        </p>
+        <Link
+          href="/app/settings/organizations/new"
+          className="mt-4 inline-flex items-center px-5 py-2.5 bg-[#0a1628] dark:bg-blue-600 text-white rounded-lg text-sm font-medium"
+        >
+          Create workspace
+        </Link>
+      </div>
+    )
+  }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-[1400px]">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl">
       {/* Greeting */}
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-ink-100">
           {greeting}, {firstName} <span className="inline-block">👋</span>
         </h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          Here&apos;s what&apos;s happening with your business today.
+        <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
+          Here's what's happening at {currentOrg?.name} this month.
         </p>
       </div>
 
-      {/* Business hero card */}
-      {currentOrg && (
-        <div className="mb-6 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-[#0a1628] dark:bg-gray-900 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628] via-[#0a1628]/95 to-[#1a2a4a]/50" />
-          <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white text-xl font-bold shadow-lg flex-shrink-0">
-                {currentOrg.name[0]?.toUpperCase()}
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-lg font-bold text-white truncate">
-                    {currentOrg.name}
-                  </h2>
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-[10px] font-semibold uppercase tracking-wide rounded-full border border-emerald-500/30">
-                    ✓ Verified
-                  </span>
-                </div>
-                <p className="text-sm text-blue-100/70 mt-0.5">
-                  {currentOrg.description ||
-                    `Business · ${currentOrg.timezone.replace('_', ' ')}`}
-                </p>
-              </div>
-            </div>
-            <Link
-              href="/b/preview"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 text-white text-sm font-medium rounded-lg transition-colors self-start sm:self-auto"
-            >
-              View Business
-              <ArrowRightIcon className="w-4 h-4" />
-            </Link>
-          </div>
+      {/* Stats — real data */}
+      {isLoading ? (
+        <div className="flex items-center gap-3 text-gray-500 dark:text-ink-400 mb-6">
+          <Loader className="w-5 h-5" /> Loading stats...
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          <StatCard
+            label="Revenue this month"
+            value={formatMoney(analytics?.overview.revenue || 0, currency)}
+            icon={BanknotesIcon}
+            accent="emerald"
+          />
+          <StatCard
+            label="Bookings this month"
+            value={analytics?.overview.total_appointments || 0}
+            icon={CalendarDaysIcon}
+            accent="blue"
+          />
+          <StatCard
+            label="Today's appointments"
+            value={todayAppts.length}
+            icon={ClockIcon}
+            accent="indigo"
+          />
+          <StatCard
+            label="Completion rate"
+            value={`${analytics?.overview.completion_rate || 0}%`}
+            icon={CheckCircleIcon}
+            accent="amber"
+          />
         </div>
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
-        <StatCard
-          label="Today's Appointments"
-          value="18"
-          icon={CalendarDaysIcon}
-          trend={{ value: '12%', direction: 'up' }}
-          accent="blue"
-        />
-        <StatCard
-          label="Upcoming Appointments"
-          value="42"
-          icon={ClockIcon}
-          trend={{ value: '8%', direction: 'up' }}
-          accent="indigo"
-        />
-        <StatCard
-          label="Today's Revenue"
-          value="KSh 12,500"
-          icon={CurrencyDollarIcon}
-          trend={{ value: '15%', direction: 'up' }}
-          accent="emerald"
-        />
-        <StatCard
-          label="New Customers"
-          value="7"
-          icon={UserPlusIcon}
-          trend={{ value: '40%', direction: 'up' }}
-          accent="amber"
-        />
-      </div>
-
-      {/* Appointments + Calendar */}
+      {/* Today's appointments + Revenue trend */}
       <div className="grid lg:grid-cols-3 gap-4 mb-6">
-        {/* Today's appointments */}
         <Card className="lg:col-span-2 overflow-hidden">
           <CardHeader
-            title="Today's Appointments"
+            title="Today's appointments"
             action={
               <Link
                 href="/app/appointments"
@@ -168,227 +204,128 @@ export default function AppHome() {
               </Link>
             }
           />
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {appointments.map((a, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors"
-              >
-                <span className="text-xs font-medium text-gray-500 dark:text-gray-400 w-12 flex-shrink-0">
-                  {a.time}
-                </span>
-                <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-[10px] font-semibold text-gray-600 dark:text-gray-300 flex-shrink-0">
-                  {getInitials(a.name)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {a.name}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                    {a.service}
-                  </p>
-                </div>
-                <span className="hidden sm:inline text-xs text-gray-500 dark:text-gray-400">
-                  {a.staff}
-                </span>
-                <Badge variant={getStatusVariant(a.status) as never}>
-                  {a.status}
-                </Badge>
-                <button className="hidden sm:flex w-6 h-6 items-center justify-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 flex-shrink-0">
-                  <EllipsisVerticalIcon className="w-4 h-4" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {/* Mini calendar */}
-        <Card>
-          <CardHeader
-            title="September 2025"
-            action={
-              <div className="flex gap-1">
-                <button className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400">
-                  ‹
-                </button>
-                <button className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400">
-                  ›
-                </button>
-              </div>
-            }
-          />
-          <div className="p-4">
-            <div className="grid grid-cols-7 gap-1 text-center mb-2">
-              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
-                <span
-                  key={d}
-                  className="text-[10px] font-medium uppercase text-gray-400 dark:text-gray-500"
-                >
-                  {d.slice(0, 3)}
-                </span>
-              ))}
+          {todayAppts.length === 0 ? (
+            <div className="p-8 text-center text-sm text-gray-500 dark:text-ink-400">
+              No appointments today.
             </div>
-            <div className="grid grid-cols-7 gap-1 text-center">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((d) => (
-                <button
-                  key={d}
-                  className="aspect-square text-xs font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
-                >
-                  {d}
-                </button>
-              ))}
-              {[12].map((d) => (
-                <button
-                  key={d}
-                  className="aspect-square text-xs font-semibold text-white bg-[#0a1628] dark:bg-blue-600 rounded-md shadow-sm"
-                >
-                  {d}
-                </button>
-              ))}
-              {[13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30].map((d) => (
-                <button
-                  key={d}
-                  className="aspect-square text-xs font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
-                >
-                  {d}
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center justify-center gap-4 mt-4 pt-3 border-t border-gray-100 dark:border-gray-800">
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                  Bookings
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#0a1628] dark:bg-blue-600" />
-                <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                  Today
-                </span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-                <span className="text-[10px] text-gray-500 dark:text-gray-400">
-                  Selected
-                </span>
-              </div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      {/* Performance + Popular Services */}
-      <div className="grid lg:grid-cols-3 gap-4 mb-6">
-        <Card className="lg:col-span-2">
-          <CardHeader
-            title="Business Performance"
-            action={
-              <select className="text-xs font-medium text-gray-600 dark:text-gray-300 bg-transparent border border-gray-200 dark:border-gray-700 rounded-md px-2 py-1 focus:outline-none">
-                <option>Last 7 days</option>
-                <option>Last 30 days</option>
-                <option>Last 90 days</option>
-              </select>
-            }
-          />
-          <div className="p-5 pt-2">
-            <div className="h-56">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#0a1628',
-                      border: 'none',
-                      borderRadius: '8px',
-                      color: 'white',
-                      fontSize: '12px',
-                    }}
-                    labelStyle={{ color: '#93c5fd', fontSize: '11px' }}
-                    formatter={(value) => [`KSh ${Number(value).toLocaleString()}`, 'Revenue']}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#2a44e8"
-                    strokeWidth={2.5}
-                    dot={false}
-                    activeDot={{ r: 5, fill: '#2a44e8' }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="flex justify-between text-[10px] text-gray-400 dark:text-gray-500 mt-2">
-              {chartData.map((d) => (
-                <span key={d.day}>{d.day.split(' ')[1]}</span>
-              ))}
-            </div>
-          </div>
-        </Card>
-
-        <Card>
-          <CardHeader
-            title="Popular Services"
-            action={
-              <Link
-                href="/app/services"
-                className="text-xs font-medium text-[#0a1628] dark:text-blue-400 hover:underline"
-              >
-                View all →
-              </Link>
-            }
-          />
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {popularServices.map((s, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors"
-              >
+          ) : (
+            <div className="divide-y divide-gray-100 dark:divide-ink-800">
+              {todayAppts.slice(0, 6).map((a) => (
                 <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: `${s.color}20` }}
+                  key={a.id}
+                  className="flex items-center gap-3 px-5 py-3 hover:bg-gray-50 dark:hover:bg-ink-800/40"
                 >
-                  <span
-                    className="w-2 h-2 rounded-full"
-                    style={{ backgroundColor: s.color }}
-                  />
+                  <span className="text-xs font-medium text-gray-500 dark:text-ink-400 w-14 flex-shrink-0">
+                    {formatTime(a.start_time)}
+                  </span>
+                  <div className="w-8 h-8 rounded-full bg-gray-100 dark:bg-ink-800 flex items-center justify-center text-[10px] font-semibold text-gray-600 dark:text-ink-300 flex-shrink-0">
+                    {(a.customer?.name || '?')
+                      .split(' ')
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join('')
+                      .toUpperCase()}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 dark:text-ink-100 truncate">
+                      {a.customer?.name || 'Unknown'}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-ink-400 truncate">
+                      {a.service_name} · {a.staff_name}
+                    </p>
+                  </div>
+                  <Badge variant={getStatusVariant(a.status) as never}>
+                    {a.status}
+                  </Badge>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {s.name}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {s.bookings} bookings
-                  </p>
-                </div>
-                <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                  KSh {s.price.toLocaleString()}
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </Card>
-      </div>
 
-      {/* CTA bottom */}
-      <div className="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-100 dark:border-blue-900 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#0a1628] dark:bg-blue-600 flex items-center justify-center flex-shrink-0">
-            <SparklesIcon className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">
-              Manage your business, anytime, anywhere
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
-              Get more bookings, streamline your operations, and grow with Apointli.
+        <Card>
+          <CardHeader title="Revenue trend" />
+          <div className="p-5 pt-2">
+            {trendData.length === 0 ? (
+              <p className="text-sm text-gray-500 dark:text-ink-400 py-6 text-center">
+                No revenue data yet.
+              </p>
+            ) : (
+              <div className="h-48">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={trendData}>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#0a1628',
+                        border: 'none',
+                        borderRadius: '8px',
+                        color: 'white',
+                        fontSize: '12px',
+                      }}
+                      labelStyle={{ color: '#93c5fd', fontSize: '11px' }}
+                      formatter={(value) => [
+                        formatMoney(Number(value), currency),
+                        'Revenue',
+                      ]}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="revenue"
+                      stroke="#0a1628"
+                      strokeWidth={2.5}
+                      dot={false}
+                      activeDot={{ r: 5, fill: '#0a1628' }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+            <p className="text-xs text-gray-400 dark:text-ink-500 mt-2 text-center">
+              Last 14 days
             </p>
           </div>
+        </Card>
+      </div>
+
+      {/* Quick actions */}
+      <div className="mb-6">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-ink-100 mb-3">
+          Quick actions
+        </h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { label: 'Add a service', href: '/app/services' },
+            { label: 'Manage staff', href: '/app/staff' },
+            { label: 'Add a location', href: '/app/locations' },
+            { label: 'View calendar', href: '/app/calendar' },
+          ].map((a) => (
+            <Link
+              key={a.href}
+              href={a.href}
+              className="group bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-4 hover:border-[#0a1628]/30 dark:hover:border-blue-500/40 hover:shadow-sm transition-all text-sm font-medium text-gray-700 dark:text-ink-200 flex items-center justify-between"
+            >
+              {a.label}
+              <ArrowRightIcon className="w-4 h-4 text-gray-300 dark:text-ink-600 group-hover:text-[#0a1628] dark:group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border border-blue-100 dark:border-blue-900/50 p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between">
+        <div>
+          <h3 className="font-semibold text-gray-900 dark:text-ink-100">
+            Manage your business, anytime, anywhere
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-ink-400 mt-0.5">
+            View your schedule, bookings, and analytics in one place.
+          </p>
         </div>
         <Link
           href="/app/calendar"
           className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0a1628] dark:bg-blue-600 hover:bg-[#1a2a4a] dark:hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex-shrink-0"
         >
-          View Calendar
+          View calendar
           <ArrowRightIcon className="w-4 h-4" />
         </Link>
       </div>

@@ -10,10 +10,10 @@
     color-scheme: dark;
   }
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-white text-ink-900 antialiased;
   }
   .dark body {
-    @apply bg-gray-950 text-gray-100;
+    @apply bg-ink-950 text-ink-100;
   }
 }
 

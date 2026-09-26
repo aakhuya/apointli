@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Welcome to apointli
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-gray-600 dark:text-ink-400">
           Create a workspace first.
         </p>
         <Link
@@ -159,12 +159,12 @@ export default function AnalyticsPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Analytics
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             Performance overview for {currentOrg?.name}
           </p>
         </div>
 
-        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5 flex">
+        <div className="bg-gray-100 dark:bg-ink-800 rounded-lg p-0.5 flex">
           {(
             [
               { key: '7d', label: '7 days' },
@@ -179,8 +179,8 @@ export default function AnalyticsPage() {
               onClick={() => setRange(r.key)}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 range === r.key
-                  ? 'bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400'
+                  ? 'bg-white dark:bg-ink-900 text-gray-900 dark:text-white shadow-sm'
+                  : 'text-gray-500 dark:text-ink-400'
               }`}
             >
               {r.label}
@@ -196,7 +196,7 @@ export default function AnalyticsPage() {
       )}
 
       {isLoading || !data ? (
-        <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-3 text-gray-500 dark:text-ink-400">
           <Loader className="w-5 h-5" /> Loading analytics...
         </div>
       ) : (
@@ -339,21 +339,21 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader title="Top services" />
               {data.services.length === 0 ? (
-                <p className="p-5 text-sm text-gray-500 dark:text-gray-400">
+                <p className="p-5 text-sm text-gray-500 dark:text-ink-400">
                   No data for this period.
                 </p>
               ) : (
                 <div className="divide-y divide-gray-100 dark:divide-gray-800">
                   {data.services.map((s, i) => (
                     <div key={i} className="flex items-center gap-3 px-5 py-3">
-                      <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300">
+                      <div className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-ink-800 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-ink-300">
                         {i + 1}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                           {s.name}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-500 dark:text-ink-400">
                           {s.bookings} bookings
                         </p>
                       </div>
@@ -369,7 +369,7 @@ export default function AnalyticsPage() {
             <Card>
               <CardHeader title="Top staff" />
               {data.staff.length === 0 ? (
-                <p className="p-5 text-sm text-gray-500 dark:text-gray-400">
+                <p className="p-5 text-sm text-gray-500 dark:text-ink-400">
                   No data for this period.
                 </p>
               ) : (
@@ -388,7 +388,7 @@ export default function AnalyticsPage() {
                         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                           {s.name}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-500 dark:text-ink-400">
                           {s.bookings} bookings
                         </p>
                       </div>
@@ -411,7 +411,7 @@ export default function AnalyticsPage() {
                   const intensity = h.count / maxHourly
                   const bgColor =
                     h.count === 0
-                      ? 'bg-gray-100 dark:bg-gray-800'
+                      ? 'bg-gray-100 dark:bg-ink-800'
                       : intensity > 0.75
                         ? 'bg-[#0a1628] dark:bg-blue-500'
                         : intensity > 0.5
@@ -439,7 +439,7 @@ export default function AnalyticsPage() {
                   )
                 })}
               </div>
-              <div className="flex justify-between text-[10px] text-gray-400 dark:text-gray-500 mt-2">
+              <div className="flex justify-between text-[10px] text-gray-400 dark:text-ink-500 mt-2">
                 {[0, 4, 8, 12, 16, 20, 23].map((h) => (
                   <span key={h}>{h}:00</span>
                 ))}
@@ -452,14 +452,14 @@ export default function AnalyticsPage() {
             <Card className="p-5">
               <div className="flex items-center gap-3 mb-2">
                 <ClockIcon className="w-4 h-4 text-gray-400" />
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                <p className="text-xs font-medium text-gray-500 dark:text-ink-400 uppercase tracking-wide">
                   Completion rate
                 </p>
               </div>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {data.overview.completion_rate}%
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 dark:text-ink-400 mt-1">
                 {data.overview.completed} of {data.overview.total_appointments}
               </p>
             </Card>
@@ -467,14 +467,14 @@ export default function AnalyticsPage() {
             <Card className="p-5">
               <div className="flex items-center gap-3 mb-2">
                 <XCircleIcon className="w-4 h-4 text-gray-400" />
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                <p className="text-xs font-medium text-gray-500 dark:text-ink-400 uppercase tracking-wide">
                   Cancellation rate
                 </p>
               </div>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {data.overview.cancellation_rate}%
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 dark:text-ink-400 mt-1">
                 {data.overview.cancelled} cancellations
               </p>
             </Card>
@@ -482,14 +482,14 @@ export default function AnalyticsPage() {
             <Card className="p-5 col-span-2 lg:col-span-1">
               <div className="flex items-center gap-3 mb-2">
                 <XCircleIcon className="w-4 h-4 text-gray-400" />
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                <p className="text-xs font-medium text-gray-500 dark:text-ink-400 uppercase tracking-wide">
                   No-show rate
                 </p>
               </div>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {data.overview.no_show_rate}%
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-xs text-gray-500 dark:text-ink-400 mt-1">
                 {data.overview.no_show} no-shows
               </p>
             </Card>

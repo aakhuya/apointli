@@ -67,7 +67,7 @@ export function LocaleFields({
 
   if (loading) {
     return (
-      <div className="text-xs text-gray-400 dark:text-gray-500">
+      <div className="text-xs text-gray-400 dark:text-ink-500">
         Loading locales...
       </div>
     )
@@ -77,13 +77,13 @@ export function LocaleFields({
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
             Country
           </label>
           <select
             value={countryCode}
             onChange={(e) => handleCountryChange(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
           >
             <option value="">— Select country —</option>
             {countries.map((c) => (
@@ -95,7 +95,7 @@ export function LocaleFields({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
             Timezone
           </label>
           <select
@@ -107,7 +107,7 @@ export function LocaleFields({
                 currency,
               })
             }
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
           >
             <option value="UTC">UTC</option>
             {timezoneGroups.map((group) => (
@@ -125,7 +125,7 @@ export function LocaleFields({
 
       {showCurrency && (
         <div className="mt-4">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+          <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
             Currency
           </label>
           <select
@@ -137,7 +137,7 @@ export function LocaleFields({
                 currency: e.target.value,
               })
             }
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
           >
             {currencies.map((c) => (
               <option key={c.code} value={c.code}>

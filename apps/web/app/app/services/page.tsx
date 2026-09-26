@@ -87,7 +87,7 @@ export default function ServicesPage() {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
           Welcome to apointli
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
+        <p className="mt-2 text-gray-600 dark:text-ink-400">
           You need a workspace before you can add services.
         </p>
         <Link
@@ -102,7 +102,7 @@ export default function ServicesPage() {
 
   if (orgLoading || isLoading) {
     return (
-      <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-gray-400">
+      <div className="p-8 flex items-center gap-3 text-gray-500 dark:text-ink-400">
         <Loader className="w-5 h-5" /> Loading services...
       </div>
     )
@@ -115,7 +115,7 @@ export default function ServicesPage() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             Services
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             What your business offers
           </p>
         </div>
@@ -134,19 +134,19 @@ export default function ServicesPage() {
       )}
 
       {showCreate && (
-        <div className="mb-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+        <div className="mb-6 bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-5">
           <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
             New service
           </h2>
           <form onSubmit={handleSubmit(onCreate)} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Name
                 </label>
                 <input
                   {...register('name')}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                   placeholder="Haircut"
                 />
                 {errors.name && (
@@ -156,39 +156,39 @@ export default function ServicesPage() {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                   Duration (minutes)
                 </label>
                 <input
                   {...register('duration_minutes')}
                   type="number"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                   placeholder="45"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                 Description
               </label>
               <textarea
                 {...register('description')}
                 rows={2}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                 placeholder="Optional"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+              <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
                 Price (USD)
               </label>
               <input
                 {...register('price')}
                 type="number"
                 step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
                 placeholder="35.00"
               />
             </div>
@@ -208,7 +208,7 @@ export default function ServicesPage() {
                   reset()
                   setShowCreate(false)
                 }}
-                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                className="px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-ink-300 hover:bg-gray-100 dark:hover:bg-ink-800 rounded-lg"
               >
                 Cancel
               </button>
@@ -218,8 +218,8 @@ export default function ServicesPage() {
       )}
 
       {services.length === 0 ? (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-12 text-center">
-          <div className="w-12 h-12 mx-auto rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-3">
+        <div className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-12 text-center">
+          <div className="w-12 h-12 mx-auto rounded-full bg-gray-100 dark:bg-ink-800 flex items-center justify-center mb-3">
             <svg
               className="w-6 h-6 text-gray-400"
               fill="none"
@@ -237,15 +237,15 @@ export default function ServicesPage() {
           <h3 className="font-semibold text-gray-900 dark:text-white">
             No services yet
           </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
             Add your first service to start accepting bookings.
           </p>
         </div>
       ) : (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+        <div className="bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-800/50 border-b border-gray-200 dark:border-gray-800">
-              <tr className="text-left text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            <thead className="bg-gray-50 dark:bg-ink-800/50 border-b border-gray-200 dark:border-ink-800">
+              <tr className="text-left text-xs uppercase tracking-wide text-gray-500 dark:text-ink-400">
                 <th className="px-4 py-3 font-medium">Service</th>
                 <th className="px-4 py-3 font-medium hidden sm:table-cell">
                   Duration
@@ -260,7 +260,7 @@ export default function ServicesPage() {
               {services.map((s) => (
                 <tr
                   key={s.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-800/40"
+                  className="hover:bg-gray-50 dark:hover:bg-ink-800/40"
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
@@ -273,17 +273,17 @@ export default function ServicesPage() {
                           {s.name}
                         </p>
                         {s.description && (
-                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                          <p className="text-xs text-gray-500 dark:text-ink-400 truncate">
                             {s.description}
                           </p>
                         )}
                       </div>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden sm:table-cell">
+                  <td className="px-4 py-3 text-gray-600 dark:text-ink-300 hidden sm:table-cell">
                     {s.duration_minutes} min
                   </td>
-                  <td className="px-4 py-3 text-gray-600 dark:text-gray-300 hidden md:table-cell">
+                  <td className="px-4 py-3 text-gray-600 dark:text-ink-300 hidden md:table-cell">
                     {s.price != null ? `$${s.price.toFixed(2)}` : '—'}
                   </td>
                   <td className="px-4 py-3 text-right">

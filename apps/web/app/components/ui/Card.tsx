@@ -8,7 +8,7 @@ interface CardProps {
 export function Card({ children, className = '' }: CardProps) {
   return (
     <div
-      className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl ${className}`}
+      className={`bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-2xl ${className}`}
     >
       {children}
     </div>
@@ -23,7 +23,7 @@ export function CardHeader({
   action?: ReactNode
 }) {
   return (
-    <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+    <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 dark:border-ink-800">
       <h3 className="font-semibold text-gray-900 dark:text-white text-[15px]">
         {title}
       </h3>
