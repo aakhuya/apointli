@@ -94,6 +94,16 @@ export const authService = {
 }
 
 // ─── Organization service ───
+export interface Member {
+  id: string
+  user_id: string
+  email: string
+  first_name: string | null
+  last_name: string | null
+  role: 'OWNER' | 'ADMIN' | 'MANAGER' | 'STAFF' | 'RECEPTIONIST'
+  accepted_at: string | null
+}
+
 export const orgService = {
   async list(): Promise<OrganizationSummary[]> {
     const res = await apiClient.get<OrganizationSummary[]>('/organizations')
@@ -113,6 +123,50 @@ export const orgService = {
   async get(id: string): Promise<Organization> {
     const res = await apiClient.get<Organization>(`/organizations/${id}`)
     return res.data
+  },
+
+  async update(
+    id: string,
+    data: Partial<{
+      name: string
+      description: string
+      logo_url: string
+      cover_url: string
+      website: string
+      phone: string
+      email: string
+      address: string
+      city: string
+      state: string
+      country: string
+      postal_code: string
+      timezone: string
+      currency: string
+    }>,
+  ): Promise<Organization> {
+    const res = await apiClient.patch<Organization>(`/organizations/${id}`, data)
+    return res.data
+  },
+
+  async listMembers(orgId: string): Promise<Member[]> {
+    const res = await apiClient.get<Member[]>(`/organizations/${orgId}/members`)
+    return res.data
+  },
+
+  async addMember(
+    orgId: string,
+    email: string,
+    role: string,
+  ): Promise<Member> {
+    const res = await apiClient.post<Member>(
+      `/organizations/${orgId}/members`,
+      { email, role },
+    )
+    return res.data
+  },
+
+  async removeMember(orgId: string, memberId: string): Promise<void> {
+    await apiClient.delete(`/organizations/${orgId}/members/${memberId}`)
   },
 }
 
@@ -633,3 +687,4 @@ export const notificationApi = {
     return res.data
   },
 }
+

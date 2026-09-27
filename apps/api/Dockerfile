@@ -1,41 +1,42 @@
-# Development stage
-FROM python:3.12-slim AS development
+# ─── Base ───
+FROM python:3.12-slim AS base
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
 
 WORKDIR /app
 
-# System deps
+# System dependencies for asyncpg / psycopg / cryptography
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python deps
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source
-COPY . .
-
-EXPOSE 3001
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3001", "--reload"]
-
-
-# Production stage
-FROM python:3.12-slim AS production
-
-WORKDIR /app
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+# ─── Dependencies ───
+FROM base AS deps
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+
+# ─── Production ───
+FROM base AS production
+
+COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
+COPY --from=deps /usr/local/bin /usr/local/bin
+
 COPY . .
 
-EXPOSE 3001
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash appuser \
+    && chown -R appuser:appuser /app
+USER appuser
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "3001", "--workers", "4"]
+EXPOSE 8000
+
+# Default command — overridden by Render/other hosts if needed
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]

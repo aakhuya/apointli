@@ -43,7 +43,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <TopBar onOpenMobileMenu={() => setMobileOpen(true)} />
 
         {/* Main content — extra bottom padding on mobile for the fixed tab bar */}
-        <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">{children}</main>
+        <main className="flex-1 overflow-y-auto pb-20 lg:pb-0">
+          <div className="animate-fade-in">{children}</div>
+        </main>
       </div>
 
       {/* Mobile bottom nav */}

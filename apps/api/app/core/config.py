@@ -22,7 +22,23 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
 
     # CORS
-    CORS_ORIGINS: list[str] = ["http://localhost:3002", "http://localhost:3000"]
+    CORS_ORIGINS_RAW: str = "http://localhost:3002,http://localhost:3000"
+
+    @property
+    def CORS_ORIGINS(self) -> list[str]:
+        """
+        Parse CORS_ORIGINS from a comma-separated env var.
+        Supports both JSON array format and comma-separated string.
+        """
+        raw = self.CORS_ORIGINS_RAW.strip()
+        if raw.startswith("["):
+            import json
+
+            try:
+                return json.loads(raw)
+            except Exception:
+                pass
+        return [o.strip() for o in raw.split(",") if o.strip()]
 
     # Database
     DATABASE_URL: str = "postgresql+asyncpg://apointli:apointli123@localhost:5432/apointli"
