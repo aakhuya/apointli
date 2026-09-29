@@ -35,19 +35,25 @@ function applyTheme(theme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('system')
+  // ────────────────────────────────────────────────
+  // Default: ALWAYS light mode unless the user has
+  // explicitly chosen otherwise (via localStorage).
+  // This prevents the "dark mode from nowhere" bug.
+  // ────────────────────────────────────────────────
+  const [theme, setThemeState] = useState<Theme>('light')
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
 
-  // Load theme on mount
+  // Load saved theme on mount
   useEffect(() => {
-    const saved = (localStorage.getItem(STORAGE_KEY) as Theme) || 'system'
-    setThemeState(saved)
-    const resolved = saved === 'system' ? getSystemTheme() : saved
+    const saved = localStorage.getItem(STORAGE_KEY) as Theme | null
+    const initial: Theme = saved || 'light'
+    setThemeState(initial)
+    const resolved = initial === 'system' ? getSystemTheme() : initial
     setResolvedTheme(resolved)
-    applyTheme(saved)
+    applyTheme(initial)
   }, [])
 
-  // Listen to system theme changes
+  // Listen to system changes only when user chose 'system'
   useEffect(() => {
     if (theme !== 'system') return
     const mq = window.matchMedia('(prefers-color-scheme: dark)')

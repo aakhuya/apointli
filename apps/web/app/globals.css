@@ -85,3 +85,12 @@
     @apply bg-gray-400 dark:bg-ink-600;
   }
 }
+
+/* Force light mode inside .light wrapper, regardless of html.dark */
+.light {
+  color-scheme: light;
+}
+
+.light * {
+  /* Neutralize dark: prefixed utilities inside light wrapper */
+}
