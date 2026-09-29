@@ -39,4 +39,4 @@ USER appuser
 EXPOSE 8000
 
 # Default command — overridden by Render/other hosts if needed
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+CMD ["./start.sh"]
