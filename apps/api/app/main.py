@@ -1,3 +1,4 @@
+import logging
 import traceback
 from contextlib import asynccontextmanager
 
@@ -10,19 +11,28 @@ from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.database import engine
 
+# Set up logging so errors surface in Render's log stream
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("apointli")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print(f"🚀 Apointli API starting in {settings.ENVIRONMENT} mode")
+    logger.info(f"🚀 Apointli API starting in {settings.ENVIRONMENT} mode")
     try:
         async with engine.begin() as conn:
             await conn.execute(text("SELECT 1"))
-        print("✅ Database connection OK")
+        logger.info("✅ Database connection OK")
     except Exception as e:
-        print(f"❌ Database connection FAILED: {type(e).__name__}: {e}")
+        logger.error(f"❌ Database connection FAILED: {type(e).__name__}: {e}")
+
+    logger.info(f"🔓 CORS allowed origins: {settings.CORS_ORIGINS}")
     yield
     await engine.dispose()
-    print("👋 Apointli API shut down")
+    logger.info("👋 Apointli API shut down")
 
 
 app = FastAPI(
@@ -32,20 +42,31 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+# ─── CORS ───
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
+    allow_origin_regex=r"https?://[a-z0-9-]+\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=600,
 )
 
 
-# ─── Global exception handler ───
+# ─── Global error handler ───
+# Logs the FULL traceback with logging.error() so it shows up in Render
 @app.exception_handler(Exception)
 async def unhandled_exception_handler(request: Request, exc: Exception):
-    print(f"💥 Unhandled error on {request.method} {request.url.path}")
-    traceback.print_exc()
+    tb = traceback.format_exc()
+    logger.error(
+        f"💥 Unhandled error on {request.method} {request.url.path}\n"
+        f"   Exception type: {type(exc).__name__}\n"
+        f"   Exception message: {exc}\n"
+        f"   Traceback:\n{tb}"
+    )
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"detail": "An unexpected error occurred"},
