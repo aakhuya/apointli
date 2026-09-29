@@ -38,6 +38,8 @@ services:
         value: apointli <onboarding@resend.dev>
       - key: CORS_ORIGINS_RAW
         sync: false
+      - key: APP_BASE_URL
+        sync: false
 
   # ─── Key Value (Redis) ───
   - type: keyvalue
