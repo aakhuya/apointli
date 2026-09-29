@@ -47,4 +47,22 @@ class Settings(BaseSettings):
     REDIS_URL: str = "redis://localhost:6379/0"
 
 
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def ensure_async_driver(cls, v: str) -> str:
+        """
+        Render and some hosts provide DATABASE_URL as `postgres://...` or
+        `postgresql://...`. Our app needs the async driver prefix
+        `postgresql+asyncpg://`. Convert if necessary.
+        """
+        if not isinstance(v, str):
+            return v
+        if v.startswith("postgres://"):
+            return v.replace("postgres://", "postgresql+asyncpg://", 1)
+        if v.startswith("postgresql://"):
+            return v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
+
+
 settings = Settings()
