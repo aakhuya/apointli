@@ -67,18 +67,27 @@ export default function LoginPage() {
     }
   }
 
+  const notAvailable = (provider: string) => {
+    window.alert(
+      `${provider} sign-in is not available in the portfolio demo.\n\nPlease use email and password to sign in.`,
+    )
+  }
+
   return (
-    <div className="h-screen bg-white flex flex-col lg:flex-row overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       {/* Left - Form */}
-      <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-16 bg-white order-2 lg:order-1">
+      <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-16 py-8 bg-white order-2 lg:order-1">
         <div className="w-full max-w-sm">
           <div className="mb-8">
-            <ApointliLogo size="md" />
+            <ApointliLogo size="md" variant="dark" />
           </div>
+
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Welcome back</h1>
-            <p className="mt-2 text-sm text-gray-500">
-              Don&apos;t have an account?{' '}
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              Welcome back
+            </h1>
+            <p className="mt-1.5 text-sm text-gray-500">
+              Don't have an account?{' '}
               <Link
                 href="/auth/register"
                 className="font-semibold text-[#0a1628] hover:underline"
@@ -89,25 +98,33 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl text-sm text-rose-600">
-              {error}
+            <div className="mb-4 p-3 bg-rose-50 border border-rose-200 rounded-xl">
+              <p className="text-sm text-rose-600">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              <label
+                htmlFor="email"
+                className="block text-sm font-semibold text-gray-700 mb-1.5"
+              >
                 Email address
               </label>
               <input
                 {...register('email')}
+                id="email"
                 type="email"
                 autoComplete="email"
-                className={`w-full px-4 py-3 border-2 ${errors.email ? 'border-rose-300' : 'border-gray-300'} rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] text-sm bg-gray-50`}
+                className={`w-full px-4 py-3 border-2 ${
+                  errors.email ? 'border-rose-300' : 'border-gray-200'
+                } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-transparent text-sm placeholder-gray-400 bg-gray-50 text-gray-900`}
                 placeholder="you@example.com"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-rose-600">{errors.email.message}</p>
+                <p className="mt-1.5 text-sm text-rose-600">
+                  {errors.email.message}
+                </p>
               )}
               {lastUsedEmail && !emailValue && (
                 <div className="mt-2 p-2 bg-gray-50 border border-gray-200 rounded-lg">
@@ -127,7 +144,10 @@ export default function LoginPage() {
 
             <div>
               <div className="flex justify-between items-center mb-1.5">
-                <label className="block text-sm font-semibold text-gray-700">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-semibold text-gray-700"
+                >
                   Password
                 </label>
                 <Link
@@ -140,30 +160,61 @@ export default function LoginPage() {
               <div className="relative">
                 <input
                   {...register('password')}
+                  id="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
-                  className={`w-full px-4 py-3 border-2 ${errors.password ? 'border-rose-300' : 'border-gray-300'} rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] text-sm bg-gray-50 pr-12`}
+                  className={`w-full px-4 py-3 border-2 ${
+                    errors.password ? 'border-rose-300' : 'border-gray-200'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-transparent text-sm placeholder-gray-400 bg-gray-50 text-gray-900 pr-12`}
                   placeholder="Enter your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   {showPassword ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
                     </svg>
                   ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
                     </svg>
                   )}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-rose-600">{errors.password.message}</p>
+                <p className="mt-1.5 text-sm text-rose-600">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
@@ -179,7 +230,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center items-center gap-2 py-3 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] disabled:opacity-50 transition-all shadow-sm text-sm"
+              className="w-full flex justify-center items-center gap-2 py-2.5 px-4 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0a1628] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm"
             >
               {isLoading ? (
                 <>
@@ -204,13 +255,34 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-2.5">
-            <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all text-sm font-medium text-gray-700">
-              <GoogleIcon /> Continue with Google
+            <button
+              type="button"
+              onClick={() => notAvailable('Google')}
+              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all text-sm font-medium text-gray-700 shadow-sm"
+            >
+              <GoogleIcon />
+              Continue with Google
             </button>
-            <button className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-black hover:bg-gray-900 transition-all text-sm font-medium text-white">
-              <AppleIcon className="w-5 h-5 text-white" /> Continue with Apple
+            <button
+              type="button"
+              onClick={() => notAvailable('Apple')}
+              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-200 rounded-xl bg-black hover:bg-gray-900 transition-all text-sm font-medium text-white shadow-sm"
+            >
+              <AppleIcon className="w-5 h-5 text-white" />
+              Continue with Apple
             </button>
           </div>
+
+          <p className="mt-6 text-center text-xs text-gray-500">
+            By continuing, you agree to our{' '}
+            <a href="#" className="text-[#0a1628] hover:underline font-medium">
+              Terms of Service
+            </a>{' '}
+            and{' '}
+            <a href="#" className="text-[#0a1628] hover:underline font-medium">
+              Privacy Policy
+            </a>
+          </p>
         </div>
       </div>
 
@@ -229,24 +301,6 @@ export default function LoginPage() {
           <p className="mt-4 text-blue-100/80 text-center text-lg">
             Access your appointments, staff, and customers all in one place.
           </p>
-          <div className="mt-10 space-y-3 w-full max-w-xs">
-            {[
-              'Free to start — no credit card required',
-              'Setup in minutes',
-              'Secure by design',
-            ].map((t) => (
-              <div key={t} className="flex items-center gap-3 text-blue-100/80">
-                <svg className="w-5 h-5 text-blue-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-sm">{t}</span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </div>

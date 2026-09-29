@@ -71,13 +71,18 @@ export default function RegisterPage() {
     }
   }
 
+  const notAvailable = (provider: string) => {
+    window.alert(
+      `${provider} sign-up is not available in the portfolio demo.\n\nPlease use email and password to create an account.`,
+    )
+  }
+
   return (
     <div className="min-h-screen bg-white flex flex-col lg:flex-row">
-      {/* Left - Form */}
       <div className="flex-1 flex items-center justify-center px-6 sm:px-12 lg:px-16 py-12 lg:py-16 bg-white order-2 lg:order-1">
         <div className="w-full max-w-sm">
           <div className="mb-8">
-            <ApointliLogo size="md" />
+            <ApointliLogo size="md" variant="dark" />
           </div>
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-gray-900">Create account</h1>
@@ -109,12 +114,12 @@ export default function RegisterPage() {
                   type="text"
                   autoComplete="given-name"
                   className={`w-full px-4 py-3 border-2 ${
-                    errors.firstName ? 'border-rose-300' : 'border-gray-300'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] text-sm bg-gray-50`}
+                    errors.firstName ? 'border-rose-300' : 'border-gray-200'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-transparent text-sm placeholder-gray-400 bg-gray-50 text-gray-900`}
                   placeholder="John"
                 />
                 {errors.firstName && (
-                  <p className="mt-1 text-sm text-rose-600">
+                  <p className="mt-1.5 text-sm text-rose-600">
                     {errors.firstName.message}
                   </p>
                 )}
@@ -128,12 +133,12 @@ export default function RegisterPage() {
                   type="text"
                   autoComplete="family-name"
                   className={`w-full px-4 py-3 border-2 ${
-                    errors.lastName ? 'border-rose-300' : 'border-gray-300'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] text-sm bg-gray-50`}
+                    errors.lastName ? 'border-rose-300' : 'border-gray-200'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-transparent text-sm placeholder-gray-400 bg-gray-50 text-gray-900`}
                   placeholder="Doe"
                 />
                 {errors.lastName && (
-                  <p className="mt-1 text-sm text-rose-600">
+                  <p className="mt-1.5 text-sm text-rose-600">
                     {errors.lastName.message}
                   </p>
                 )}
@@ -149,12 +154,12 @@ export default function RegisterPage() {
                 type="email"
                 autoComplete="email"
                 className={`w-full px-4 py-3 border-2 ${
-                  errors.email ? 'border-rose-300' : 'border-gray-300'
-                } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] text-sm bg-gray-50`}
+                  errors.email ? 'border-rose-300' : 'border-gray-200'
+                } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-transparent text-sm placeholder-gray-400 bg-gray-50 text-gray-900`}
                 placeholder="you@example.com"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-rose-600">
+                <p className="mt-1.5 text-sm text-rose-600">
                   {errors.email.message}
                 </p>
               )}
@@ -170,47 +175,40 @@ export default function RegisterPage() {
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
                   className={`w-full px-4 py-3 border-2 ${
-                    errors.password ? 'border-rose-300' : 'border-gray-300'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] text-sm bg-gray-50 pr-12`}
+                    errors.password ? 'border-rose-300' : 'border-gray-200'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-transparent text-sm placeholder-gray-400 bg-gray-50 text-gray-900 pr-12`}
                   placeholder="Create a strong password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  )}
+                  {showPassword ? 'Hide' : 'Show'}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-rose-600">
+                <p className="mt-1.5 text-sm text-rose-600">
                   {errors.password.message}
                 </p>
               )}
               {password && (
                 <ul className="mt-2 space-y-1">
                   {rules.map((r) => (
-                    <li key={r.label} className="flex items-center gap-2 text-xs">
-                      {r.met ? (
-                        <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                      <span className={r.met ? 'text-green-700' : 'text-gray-500'}>
+                    <li
+                      key={r.label}
+                      className="flex items-center gap-2 text-xs"
+                    >
+                      <span
+                        className={`w-3 h-3 rounded-full flex-shrink-0 ${
+                          r.met ? 'bg-green-500' : 'bg-gray-200'
+                        }`}
+                      />
+                      <span
+                        className={
+                          r.met ? 'text-green-700' : 'text-gray-500'
+                        }
+                      >
                         {r.label}
                       </span>
                     </li>
@@ -229,30 +227,20 @@ export default function RegisterPage() {
                   type={showConfirm ? 'text' : 'password'}
                   autoComplete="new-password"
                   className={`w-full px-4 py-3 border-2 ${
-                    errors.confirmPassword ? 'border-rose-300' : 'border-gray-300'
-                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-[#0a1628] text-sm bg-gray-50 pr-12`}
+                    errors.confirmPassword ? 'border-rose-300' : 'border-gray-200'
+                  } rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0a1628] focus:border-transparent text-sm placeholder-gray-400 bg-gray-50 text-gray-900 pr-12`}
                   placeholder="Confirm your password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirm(!showConfirm)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  aria-label={showConfirm ? 'Hide password' : 'Show password'}
                 >
-                  {showConfirm ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  )}
+                  {showConfirm ? 'Hide' : 'Show'}
                 </button>
               </div>
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-rose-600">
+                <p className="mt-1.5 text-sm text-rose-600">
                   {errors.confirmPassword.message}
                 </p>
               )}
@@ -261,7 +249,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center items-center gap-2 py-3 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] disabled:opacity-50 transition-all shadow-sm text-sm"
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 bg-[#0a1628] text-white font-semibold rounded-xl hover:bg-[#1a2a4a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0a1628] transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm"
             >
               {isLoading ? (
                 <>
@@ -288,21 +276,35 @@ export default function RegisterPage() {
           <div className="space-y-2.5">
             <button
               type="button"
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all text-sm font-medium text-gray-700"
+              onClick={() => notAvailable('Google')}
+              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-200 rounded-xl bg-white hover:bg-gray-50 transition-all text-sm font-medium text-gray-700 shadow-sm"
             >
-              <GoogleIcon /> Continue with Google
+              <GoogleIcon />
+              Continue with Google
             </button>
             <button
               type="button"
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 border-2 border-gray-200 rounded-xl bg-black hover:bg-gray-900 transition-all text-sm font-medium text-white"
+              onClick={() => notAvailable('Apple')}
+              className="w-full flex items-center justify-center gap-3 px-4 py-2.5 border border-gray-200 rounded-xl bg-black hover:bg-gray-900 transition-all text-sm font-medium text-white shadow-sm"
             >
-              <AppleIcon className="w-5 h-5 text-white" /> Continue with Apple
+              <AppleIcon className="w-5 h-5 text-white" />
+              Continue with Apple
             </button>
           </div>
+
+          <p className="mt-6 text-center text-xs text-gray-500">
+            By creating an account, you agree to our{' '}
+            <a href="#" className="text-[#0a1628] hover:underline font-medium">
+              Terms of Service
+            </a>{' '}
+            and{' '}
+            <a href="#" className="text-[#0a1628] hover:underline font-medium">
+              Privacy Policy
+            </a>
+          </p>
         </div>
       </div>
 
-      {/* Right - Branding */}
       <div className="hidden lg:flex flex-1 bg-[#0a1628] relative overflow-hidden items-center justify-center p-12 order-1 lg:order-2">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
