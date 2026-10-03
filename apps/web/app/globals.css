@@ -9,22 +9,32 @@
   .dark {
     color-scheme: dark;
   }
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
   body {
     @apply bg-white text-ink-900 antialiased;
+    /* Prevent horizontal scrolling globally */
+    overflow-x: hidden;
   }
   .dark body {
     @apply bg-ink-950 text-ink-100;
   }
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  /* Prevent iOS auto-zoom on input focus */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
   }
-}
-
-/* Global focus ring consistency */
-@layer base {
+  @media (min-width: 640px) {
+    input,
+    textarea,
+    select {
+      font-size: 14px;
+    }
+  }
+  /* Better focus rings */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible,
@@ -32,65 +42,48 @@
   a:focus-visible {
     @apply outline-none ring-2 ring-offset-2 ring-offset-white dark:ring-offset-ink-950;
   }
-
-  input:focus,
-  textarea:focus,
-  select:focus {
-    @apply outline-none;
-  }
 }
 
-@layer components {
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-150;
-  }
-
-  .card-hover {
-    @apply transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
-  }
-
-  .input-base {
-    @apply w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-900 text-gray-900 dark:text-ink-100 text-sm transition-colors focus:border-[#0a1628] dark:focus:border-blue-500;
-  }
-}
-
-@keyframes fade-in-up {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in-up 0.25s ease-out;
-}
-
-/* Custom scrollbar */
 @layer utilities {
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  .text-balance {
+    text-wrap: balance;
   }
-  ::-webkit-scrollbar-track {
-    background: transparent;
+  /* Hide scrollbar but keep scrolling */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
-  ::-webkit-scrollbar-thumb {
-    @apply bg-gray-300 dark:bg-ink-700 rounded-full;
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-gray-400 dark:bg-ink-600;
+  /* Custom scrollbar for desktop */
+  @media (min-width: 1024px) {
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      @apply bg-gray-300 dark:bg-ink-700 rounded-full;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      @apply bg-gray-400 dark:bg-ink-600;
+    }
   }
-}
-
-/* Force light mode inside .light wrapper, regardless of html.dark */
-.light {
-  color-scheme: light;
-}
-
-.light * {
-  /* Neutralize dark: prefixed utilities inside light wrapper */
+  /* Page fade-in */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in-up 0.25s ease-out;
+  }
 }

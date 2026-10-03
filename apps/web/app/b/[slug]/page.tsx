@@ -283,7 +283,7 @@ export default function PublicBusinessPage() {
 
         {/* Staff */}
         {business.staff.length > 0 && (
-          <div className="mt-12 pb-16">
+          <div className="mt-12 pb-32 lg:pb-16">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Our team</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {business.staff.map((st) => (
@@ -321,6 +321,20 @@ export default function PublicBusinessPage() {
             </div>
           </div>
         )}
+      </div>
+
+
+      {/* Sticky mobile CTA */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-white dark:bg-ink-950 border-t border-gray-200 dark:border-ink-800 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
+        <Link
+          href={`/b/${business.slug}/book`}
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-[#0a1628] dark:bg-blue-600 text-white font-medium rounded-xl hover:bg-[#1a2a4a] dark:hover:bg-blue-700 transition-colors"
+        >
+          Book appointment
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </Link>
       </div>
 
       {/* Footer */}

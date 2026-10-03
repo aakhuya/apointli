@@ -145,10 +145,10 @@ export default function AppHome() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl">
+    <div className="p-3 sm:p-6 lg:p-8 max-w-7xl">
       {/* Greeting */}
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-ink-100">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-ink-100">
           {greeting}, {firstName} <span className="inline-block">👋</span>
         </h1>
         <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
@@ -162,7 +162,7 @@ export default function AppHome() {
           <Loader className="w-5 h-5" /> Loading stats...
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-6">
           <StatCard
             label="Revenue this month"
             value={formatMoney(analytics?.overview.revenue || 0, currency)}
