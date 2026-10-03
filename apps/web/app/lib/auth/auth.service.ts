@@ -1,6 +1,9 @@
-import { apiClient, tokenStore } from '../api-client'
+import { apiClient } from '../api-client'
 
-// ─── Types ───
+// ═══════════════════════════════════════════════════════
+// USER & AUTH
+// ═══════════════════════════════════════════════════════
+
 export interface User {
   id: string
   email: string
@@ -8,6 +11,67 @@ export interface User {
   last_name: string | null
   email_verified: boolean
 }
+
+export interface AuthResponse {
+  access_token: string
+  refresh_token: string
+  token_type: string
+  user: User
+}
+
+export interface RegisterData {
+  email: string
+  password: string
+  first_name?: string
+  last_name?: string
+}
+
+export interface LoginData {
+  email: string
+  password: string
+}
+
+export const authService = {
+  async register(data: RegisterData): Promise<AuthResponse> {
+    const res = await apiClient.post<AuthResponse>('/auth/register', data)
+    localStorage.setItem('accessToken', res.data.access_token)
+    localStorage.setItem('refreshToken', res.data.refresh_token)
+    return res.data
+  },
+
+  async login(data: LoginData): Promise<AuthResponse> {
+    const res = await apiClient.post<AuthResponse>('/auth/login', data)
+    localStorage.setItem('accessToken', res.data.access_token)
+    localStorage.setItem('refreshToken', res.data.refresh_token)
+    return res.data
+  },
+
+  async logout(): Promise<void> {
+    const refresh = localStorage.getItem('refreshToken')
+    if (refresh) {
+      try {
+        await apiClient.post('/auth/logout', { refresh_token: refresh })
+      } catch {
+        /* ignore */
+      }
+    }
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+  },
+
+  async me(): Promise<User> {
+    const res = await apiClient.get<User>('/auth/me')
+    return res.data
+  },
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('accessToken')
+  },
+}
+
+// ═══════════════════════════════════════════════════════
+// ORGANIZATIONS
+// ═══════════════════════════════════════════════════════
 
 export interface Organization {
   id: string
@@ -38,62 +102,6 @@ export interface OrganizationSummary {
   logo_url: string | null
 }
 
-export interface AuthResponse {
-  access_token: string
-  refresh_token: string
-  token_type: string
-  user: User
-}
-
-export interface RegisterData {
-  email: string
-  password: string
-  first_name?: string
-  last_name?: string
-}
-
-export interface LoginData {
-  email: string
-  password: string
-}
-
-// ─── Auth service ───
-export const authService = {
-  async register(data: RegisterData): Promise<AuthResponse> {
-    const res = await apiClient.post<AuthResponse>('/auth/register', data)
-    tokenStore.set(res.data.access_token, res.data.refresh_token)
-    return res.data
-  },
-
-  async login(data: LoginData): Promise<AuthResponse> {
-    const res = await apiClient.post<AuthResponse>('/auth/login', data)
-    tokenStore.set(res.data.access_token, res.data.refresh_token)
-    return res.data
-  },
-
-  async logout(): Promise<void> {
-    const refresh = tokenStore.getRefresh()
-    if (refresh) {
-      try {
-        await apiClient.post('/auth/logout', { refresh_token: refresh })
-      } catch {
-        // ignore network errors on logout
-      }
-    }
-    tokenStore.clear()
-  },
-
-  async me(): Promise<User> {
-    const res = await apiClient.get<User>('/auth/me')
-    return res.data
-  },
-
-  isAuthenticated(): boolean {
-    return !!tokenStore.getAccess()
-  },
-}
-
-// ─── Organization service ───
 export interface Member {
   id: string
   user_id: string
@@ -148,16 +156,18 @@ export const orgService = {
     return res.data
   },
 
+  async deleteOrg(id: string, confirmName: string): Promise<void> {
+    await apiClient.delete(`/organizations/${id}`, {
+      data: { confirm_name: confirmName },
+    })
+  },
+
   async listMembers(orgId: string): Promise<Member[]> {
     const res = await apiClient.get<Member[]>(`/organizations/${orgId}/members`)
     return res.data
   },
 
-  async addMember(
-    orgId: string,
-    email: string,
-    role: string,
-  ): Promise<Member> {
+  async addMember(orgId: string, email: string, role: string): Promise<Member> {
     const res = await apiClient.post<Member>(
       `/organizations/${orgId}/members`,
       { email, role },
@@ -170,67 +180,10 @@ export const orgService = {
   },
 }
 
-// ─── Service domain ───
-export interface Service {
-  id: string
-  name: string
-  description: string | null
-  duration_minutes: number
-  price: number | null
-  currency: string
-  color: string
-  buffer_before_minutes: number
-  buffer_after_minutes: number
-  is_active: boolean
-  is_bookable_online: boolean
-}
+// ═══════════════════════════════════════════════════════
+// LOCATIONS
+// ═══════════════════════════════════════════════════════
 
-export interface CreateServiceData {
-  name: string
-  description?: string
-  duration_minutes: number
-  price?: number
-  currency?: string
-  color?: string
-  buffer_before_minutes?: number
-  buffer_after_minutes?: number
-  is_bookable_online?: boolean
-}
-
-export const serviceApi = {
-  async list(orgId: string): Promise<Service[]> {
-    const res = await apiClient.get<Service[]>(
-      `/organizations/${orgId}/services`,
-    )
-    return res.data
-  },
-
-  async create(orgId: string, data: CreateServiceData): Promise<Service> {
-    const res = await apiClient.post<Service>(
-      `/organizations/${orgId}/services`,
-      data,
-    )
-    return res.data
-  },
-
-  async update(
-    orgId: string,
-    serviceId: string,
-    data: Partial<CreateServiceData> & { is_active?: boolean },
-  ): Promise<Service> {
-    const res = await apiClient.patch<Service>(
-      `/organizations/${orgId}/services/${serviceId}`,
-      data,
-    )
-    return res.data
-  },
-
-  async remove(orgId: string, serviceId: string): Promise<void> {
-    await apiClient.delete(`/organizations/${orgId}/services/${serviceId}`)
-  },
-}
-
-// ─── Location domain ───
 export interface Location {
   id: string
   name: string
@@ -291,7 +244,70 @@ export const locationApi = {
   },
 }
 
-// ─── Staff domain ───
+// ═══════════════════════════════════════════════════════
+// SERVICES
+// ═══════════════════════════════════════════════════════
+
+export interface Service {
+  id: string
+  name: string
+  description: string | null
+  duration_minutes: number
+  price: number | null
+  currency: string
+  color: string
+  buffer_before_minutes: number
+  buffer_after_minutes: number
+  is_active: boolean
+  is_bookable_online: boolean
+}
+
+export interface CreateServiceData {
+  name: string
+  description?: string
+  duration_minutes: number
+  price?: number
+  currency?: string
+  color?: string
+  buffer_before_minutes?: number
+  buffer_after_minutes?: number
+  is_bookable_online?: boolean
+}
+
+export const serviceApi = {
+  async list(orgId: string): Promise<Service[]> {
+    const res = await apiClient.get<Service[]>(
+      `/organizations/${orgId}/services`,
+    )
+    return res.data
+  },
+  async create(orgId: string, data: CreateServiceData): Promise<Service> {
+    const res = await apiClient.post<Service>(
+      `/organizations/${orgId}/services`,
+      data,
+    )
+    return res.data
+  },
+  async update(
+    orgId: string,
+    serviceId: string,
+    data: Partial<CreateServiceData> & { is_active?: boolean },
+  ): Promise<Service> {
+    const res = await apiClient.patch<Service>(
+      `/organizations/${orgId}/services/${serviceId}`,
+      data,
+    )
+    return res.data
+  },
+  async remove(orgId: string, serviceId: string): Promise<void> {
+    await apiClient.delete(`/organizations/${orgId}/services/${serviceId}`)
+  },
+}
+
+// ═══════════════════════════════════════════════════════
+// STAFF
+// ═══════════════════════════════════════════════════════
+
 export interface Staff {
   id: string
   user_id: string
@@ -317,9 +333,7 @@ export interface CreateStaffData {
 
 export const staffApi = {
   async list(orgId: string): Promise<Staff[]> {
-    const res = await apiClient.get<Staff[]>(
-      `/organizations/${orgId}/staff`,
-    )
+    const res = await apiClient.get<Staff[]>(`/organizations/${orgId}/staff`)
     return res.data
   },
   async create(orgId: string, data: CreateStaffData): Promise<Staff> {
@@ -348,7 +362,10 @@ export const staffApi = {
   },
 }
 
-// ─── Staff ↔ Services ───
+// ═══════════════════════════════════════════════════════
+// STAFF ↔ SERVICES
+// ═══════════════════════════════════════════════════════
+
 export interface StaffServiceItem {
   service_id: string
   name: string
@@ -411,7 +428,10 @@ export const staffServiceApi = {
   },
 }
 
-// ─── Schedule ───
+// ═══════════════════════════════════════════════════════
+// SCHEDULE
+// ═══════════════════════════════════════════════════════
+
 export interface ScheduleRule {
   day_of_week: number
   is_active: boolean
@@ -456,7 +476,10 @@ export const scheduleApi = {
   },
 }
 
-// ─── Time Off ───
+// ═══════════════════════════════════════════════════════
+// TIME OFF
+// ═══════════════════════════════════════════════════════
+
 export interface TimeOff {
   id: string
   staff_id: string
@@ -492,14 +515,52 @@ export const timeOffApi = {
     )
     return res.data
   },
-  async remove(orgId: string, staffId: string, timeOffId: string): Promise<void> {
+  async remove(
+    orgId: string,
+    staffId: string,
+    timeOffId: string,
+  ): Promise<void> {
     await apiClient.delete(
       `/organizations/${orgId}/staff/${staffId}/time-off/${timeOffId}`,
     )
   },
 }
 
-// ─── Appointments ───
+// ═══════════════════════════════════════════════════════
+// AVAILABILITY
+// ═══════════════════════════════════════════════════════
+
+export interface AvailabilitySlot {
+  start: string
+  end: string
+  local_start: string
+  local_end: string
+  timezone: string
+}
+
+export interface AvailabilityResponse {
+  date: string
+  timezone: string
+  slots: AvailabilitySlot[]
+}
+
+export const availabilityApi = {
+  async list(
+    orgId: string,
+    params: { staff_id: string; service_id: string; date: string },
+  ): Promise<AvailabilityResponse> {
+    const res = await apiClient.get<AvailabilityResponse>(
+      `/organizations/${orgId}/availability`,
+      { params },
+    )
+    return res.data
+  },
+}
+
+// ═══════════════════════════════════════════════════════
+// APPOINTMENTS
+// ═══════════════════════════════════════════════════════
+
 export interface AppointmentCustomer {
   id: string
   name: string
@@ -578,35 +639,10 @@ export const appointmentApi = {
   },
 }
 
-// ─── Availability ───
-export interface AvailabilitySlot {
-  start: string
-  end: string
-  local_start: string
-  local_end: string
-  timezone: string
-}
+// ═══════════════════════════════════════════════════════
+// ANALYTICS
+// ═══════════════════════════════════════════════════════
 
-export interface AvailabilityResponse {
-  date: string
-  timezone: string
-  slots: AvailabilitySlot[]
-}
-
-export const availabilityApi = {
-  async list(
-    orgId: string,
-    params: { staff_id: string; service_id: string; date: string },
-  ): Promise<AvailabilityResponse> {
-    const res = await apiClient.get<AvailabilityResponse>(
-      `/organizations/${orgId}/availability`,
-      { params },
-    )
-    return res.data
-  },
-}
-
-// ─── Analytics ───
 export interface AnalyticsOverview {
   total_appointments: number
   revenue: number
@@ -664,7 +700,10 @@ export const analyticsApi = {
   },
 }
 
-// ─── Notifications ───
+// ═══════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════════════
+
 export interface NotificationItem {
   id: string
   type: string
@@ -686,19 +725,4 @@ export const notificationApi = {
     )
     return res.data
   },
-}
-
-
-// Extend orgService with delete
-const _deleteOrgExt = orgService as typeof orgService & {
-  deleteOrg?: (id: string, confirmationName: string) => Promise<void>
-}
-
-;(orgService as typeof _deleteOrgExt).deleteOrg = async (
-  id: string,
-  confirmationName: string,
-) => {
-  await apiClient.delete(`/organizations/${id}`, {
-    params: { confirmation_name: confirmationName },
-  })
 }
