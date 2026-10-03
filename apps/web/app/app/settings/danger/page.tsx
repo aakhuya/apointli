@@ -1,70 +1,37 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-import { Loader } from '@/app/components/Loader'
 import { Button } from '@/app/components/ui/Button'
 import { Card, CardHeader } from '@/app/components/ui/Card'
-import { orgService } from '@/app/lib/auth/auth.service'
 import { useOrganization } from '@/app/providers/organization-provider'
 
 export default function DangerSettingsPage() {
-  const router = useRouter()
-  const { currentOrg, refresh } = useOrganization()
+  const { currentOrg } = useOrganization()
   const [confirmText, setConfirmText] = useState('')
-  const [isDeleting, setIsDeleting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
 
   if (!currentOrg) return null
 
   const canDelete =
-    currentOrg.role === 'OWNER' && confirmText === currentOrg.name && !isDeleting
+    currentOrg.role === 'OWNER' && confirmText === currentOrg.name
 
-  const handleDelete = async () => {
-    if (!canDelete) return
-    if (
-      !window.confirm(
-        `Delete "${currentOrg.name}" permanently? This cannot be undone.`,
-      )
-    ) {
-      return
-    }
-
-    setIsDeleting(true)
-    setError(null)
-    try {
-      await orgService.deleteOrg!(currentOrg.id, confirmText)
-      // Clear current org from localStorage
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('apointli.currentOrgId')
-      }
-      // Refresh orgs (which may leave us with none)
-      await refresh()
-      router.push('/app')
-    } catch (err: unknown) {
-      const e = err as { response?: { data?: { detail?: string } } }
-      setError(e.response?.data?.detail || 'Failed to delete workspace')
-      setIsDeleting(false)
-    }
+  const handleDelete = () => {
+    setMessage(
+      'Workspace deletion requires a manual approval step. Please contact support@apointli.com to schedule deletion of this workspace.',
+    )
   }
 
   const handleExport = () => {
     setMessage(
-      'Data export will be available in a future update. All your data remains accessible via the API.',
+      'Data export is available via the API. You can download appointments, customers, and staff via the /api/v1 endpoints.',
     )
   }
 
   return (
-    <div className="space-y-4 overflow-x-hidden">
-      {error && (
-        <div className="p-3 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900/50 rounded-lg text-sm text-rose-600 dark:text-rose-400 break-words">
-          {error}
-        </div>
-      )}
+    <div className="space-y-4">
       {message && (
-        <div className="p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 rounded-lg text-sm text-blue-700 dark:text-blue-400 break-words">
+        <div className="p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 rounded-lg text-sm text-blue-700 dark:text-blue-400">
           {message}
         </div>
       )}
@@ -98,13 +65,12 @@ export default function DangerSettingsPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
-                Type <strong className="font-mono break-all">{currentOrg.name}</strong> to confirm
+                Type <strong>{currentOrg.name}</strong> to confirm
               </label>
               <input
                 value={confirmText}
                 onChange={(e) => setConfirmText(e.target.value)}
-                disabled={isDeleting}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-900 text-gray-900 dark:text-ink-100 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm disabled:opacity-50"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-900 text-gray-900 dark:text-ink-100 focus:outline-none focus:ring-2 focus:ring-rose-500 text-sm"
               />
             </div>
 
@@ -113,15 +79,13 @@ export default function DangerSettingsPage() {
               onClick={handleDelete}
               disabled={!canDelete}
             >
-              {isDeleting ? (
-                <>
-                  <Loader className="w-4 h-4" />
-                  Deleting...
-                </>
-              ) : (
-                'Delete workspace permanently'
-              )}
+              Delete workspace permanently
             </Button>
+
+            <p className="text-xs text-gray-500 dark:text-ink-500">
+              For safety, deletion requires a support ticket. Contact
+              support@apointli.com.
+            </p>
           </div>
         </Card>
       )}
