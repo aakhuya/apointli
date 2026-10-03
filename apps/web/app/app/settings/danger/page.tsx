@@ -24,7 +24,7 @@ export default function DangerSettingsPage() {
 
   const handleExport = () => {
     setMessage(
-      'Data export is available via the API. You can download appointments, customers, and staff via the /api/v1 endpoints.',
+      'Data export is available via the API. Contact support@apointli.com for a full data export.',
     )
   }
 
