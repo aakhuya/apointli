@@ -1,6 +1,6 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.database import get_db
@@ -16,6 +16,10 @@ from app.schemas.organization import (
     OrganizationResponse,
     OrganizationSummary,
     UpdateMemberRoleRequest,
+)
+from app.services.organization_delete import (
+    DeleteError,
+    delete_organization,
 )
 from app.services.organization import (
     OrgError,
@@ -188,4 +192,17 @@ async def delete_member(
     try:
         await remove_member(db, target)
     except OrgError as e:
+        raise HTTPException(status_code=e.status_code, detail=e.message)
+
+@router.delete("/{org_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_org(
+    confirmation_name: str = Query(..., description="Must match the organization name exactly"),
+    org: Organization = Depends(get_current_org),
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> None:
+    """Permanently delete an organization. Requires OWNER role."""
+    try:
+        await delete_organization(db, org, current_user.id, confirmation_name)
+    except DeleteError as e:
         raise HTTPException(status_code=e.status_code, detail=e.message)

@@ -50,8 +50,8 @@ export default function NewOrgPage() {
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-xl">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-xl overflow-x-hidden">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-ink-100">
         Create workspace
       </h1>
       <p className="text-sm text-gray-500 dark:text-ink-400 mt-1">
@@ -66,7 +66,7 @@ export default function NewOrgPage() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="mt-6 bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-6 space-y-5"
+        className="mt-6 bg-white dark:bg-ink-900 border border-gray-200 dark:border-ink-800 rounded-xl p-4 sm:p-6 space-y-5"
       >
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-ink-300 mb-1.5">
@@ -74,7 +74,7 @@ export default function NewOrgPage() {
           </label>
           <input
             {...register('name')}
-            className="w-full px-3 py-2.5 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+            className="w-full px-3 py-2.5 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-ink-100 focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
             placeholder="Bright Cuts Barbershop"
           />
           {errors.name && (
@@ -88,7 +88,7 @@ export default function NewOrgPage() {
           </label>
           <select
             {...register('timezone')}
-            className="w-full px-3 py-2.5 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
+            className="w-full px-3 py-2.5 border border-gray-300 dark:border-ink-700 rounded-lg bg-white dark:bg-ink-800 text-gray-900 dark:text-ink-100 focus:outline-none focus:ring-2 focus:ring-[#0a1628] dark:focus:ring-blue-500 text-sm"
           >
             <option value="UTC">UTC</option>
             <option value="Africa/Nairobi">Africa/Nairobi (EAT)</option>

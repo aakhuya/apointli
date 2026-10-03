@@ -20,7 +20,7 @@ export default function SettingsLayout({
   const pathname = usePathname()
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-6xl overflow-x-hidden">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-ink-100">
           Settings
@@ -31,13 +31,14 @@ export default function SettingsLayout({
       </div>
 
       <div className="grid lg:grid-cols-[220px_1fr] gap-6 lg:gap-8">
-        {/* Settings sidebar */}
-        <nav className="lg:sticky lg:top-4 lg:self-start">
-          <ul className="flex lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0">
+        {/* Settings sidebar — horizontal scroll on mobile, sticky on desktop */}
+        <nav className="lg:sticky lg:top-4 lg:self-start -mx-4 px-4 lg:mx-0 lg:px-0 overflow-x-auto lg:overflow-x-visible">
+          <ul className="flex lg:flex-col gap-1 pb-2 lg:pb-0 min-w-max lg:min-w-0">
             {nav.map((item) => {
               const active = item.exact
                 ? pathname === item.href
-                : pathname === item.href || pathname.startsWith(item.href + '/')
+                : pathname === item.href ||
+                  pathname.startsWith(item.href + '/')
               return (
                 <li key={item.href} className="flex-shrink-0">
                   <Link
@@ -56,8 +57,8 @@ export default function SettingsLayout({
           </ul>
         </nav>
 
-        {/* Settings content */}
-        <div className="min-w-0">{children}</div>
+        {/* Settings content — forces wrapping on mobile */}
+        <div className="min-w-0 overflow-x-hidden">{children}</div>
       </div>
     </div>
   )

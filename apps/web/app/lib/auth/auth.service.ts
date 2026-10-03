@@ -688,3 +688,17 @@ export const notificationApi = {
   },
 }
 
+
+// Extend orgService with delete
+const _deleteOrgExt = orgService as typeof orgService & {
+  deleteOrg?: (id: string, confirmationName: string) => Promise<void>
+}
+
+;(orgService as typeof _deleteOrgExt).deleteOrg = async (
+  id: string,
+  confirmationName: string,
+) => {
+  await apiClient.delete(`/organizations/${id}`, {
+    params: { confirmation_name: confirmationName },
+  })
+}

@@ -55,7 +55,7 @@ export default function PublicBusinessPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 overflow-hidden">
         <Loader className="w-8 h-8 text-[#0a1628]" />
       </div>
     )
